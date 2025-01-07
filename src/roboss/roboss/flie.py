@@ -97,7 +97,7 @@ class THAFlie(Node):
         
         radius = 1.0
         
-        self.send_target([-radius, 0, 1])
+        self.send_target([-radius, 0.0, 1.0])
         self._sleep(1)
         
         for i in range(2 * 2):
@@ -105,7 +105,7 @@ class THAFlie(Node):
             
             for x in np.linspace(-sign * radius, sign * radius):
                 y = sign * math.sqrt(((radius * radius) - (x * x)))
-                z = 1
+                z = 1.0
                 
                 self.send_target([x, y, z])
                 self._sleep(0.5)
