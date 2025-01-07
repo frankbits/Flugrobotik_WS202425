@@ -57,15 +57,15 @@ class THAFlie(Node):
         if HOME is None:
             self.get_logger().info("Couldn't find HOME position!")
 
-        self.send_target([0.0, 1.0, 1.0])
+        # self.send_target([0.0, 1.0, 1.0])
 
-        self._sleep(4)
+        # self._sleep(4)
 
-        self.send_target(HOME)
+        # self.send_target(HOME)
 
-        self._sleep(4)
+        # self._sleep(4)
 
-        self.land()
+        # self.land()
 
     def land(self):
         self.land_pub.publish(Empty())
