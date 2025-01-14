@@ -73,6 +73,13 @@ def generate_launch_description():
         }.items(),
     )
 
+    roboss = Node(
+        package="roboss",
+        # namespace='object_tracker',
+        executable="roboss",
+        name="roboss"
+    )
+
     return LaunchDescription(
         [
             backend_arg,
@@ -81,5 +88,6 @@ def generate_launch_description():
             motion_capture,
             object_tracker,
             safeflie,
+            roboss
         ]
     )
