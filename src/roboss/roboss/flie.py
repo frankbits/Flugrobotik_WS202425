@@ -9,6 +9,7 @@ from crazyflies_interfaces.msg import SendTarget
 
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
+from crazyflie_interfaces_python.client import LoggingClient
 
 from typing import List
 
