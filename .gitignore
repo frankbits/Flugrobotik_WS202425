@@ -172,3 +172,5 @@ cython_debug/
 
 # Log
 log/
+
+webots-controller.exe
