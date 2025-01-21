@@ -2,6 +2,7 @@ class RoutePlanner:
     def __init__(self, graph, start):
         self.graph = graph
         self.start = start
+        self.end = start
 
     def find_route(self):
         route = []
