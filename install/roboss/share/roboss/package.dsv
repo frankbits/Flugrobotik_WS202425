@@ -1,6 +1,6 @@
-source;share/roboss/hook/pythonpath.ps1
-source;share/roboss/hook/pythonpath.dsv
-source;share/roboss/hook/pythonpath.sh
-source;share/roboss/hook/ament_prefix_path.ps1
-source;share/roboss/hook/ament_prefix_path.dsv
-source;share/roboss/hook/ament_prefix_path.sh
+source;share\roboss\hook\pythonpath.ps1
+source;share\roboss\hook\pythonpath.bat
+source;share\roboss\hook\pythonpath.dsv
+source;share\roboss\hook\ament_prefix_path.ps1
+source;share\roboss\hook\ament_prefix_path.bat
+source;share\roboss\hook\ament_prefix_path.dsv
