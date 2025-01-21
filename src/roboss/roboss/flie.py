@@ -1,3 +1,5 @@
+import math
+import numpy as np
 import rclpy
 from rclpy.node import Node
 from rclpy.publisher import Publisher
@@ -7,6 +9,7 @@ from crazyflies_interfaces.msg import SendTarget
 
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
+from crazyflie_interfaces_python.client import LoggingClient
 
 from typing import List
 
@@ -34,6 +37,13 @@ class THAFlie(Node):
             topic=safeflie_name + "/send_target",
             qos_profile=qos_profile,
         )
+        
+        self.example_route_sub = self.create_subscription(
+            msg_type=Empty,
+            topic=safeflie_name + '/example_route',
+            callback=self.example_route__callback,
+            qos_profile=qos_profile
+        )
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
@@ -48,15 +58,15 @@ class THAFlie(Node):
         if HOME is None:
             self.get_logger().info("Couldn't find HOME position!")
 
-        self.send_target([0.0, 1.0, 1.0])
+        # self.send_target([0.0, 1.0, 1.0])
 
-        self._sleep(4)
+        # self._sleep(4)
 
-        self.send_target(HOME)
+        # self.send_target(HOME)
 
-        self._sleep(4)
+        # self._sleep(4)
 
-        self.land()
+        # self.land()
 
     def land(self):
         self.land_pub.publish(Empty())
@@ -83,6 +93,27 @@ class THAFlie(Node):
         except Exception as ex:
             return None
 
+    def example_route__callback(self, msg):
+        self.get_logger().info('Executing example route')
+        
+        radius = 1.0
+        
+        self.send_target([-radius, 0.0, 1.0])
+        self._sleep(1)
+        
+        for i in range(2 * 2):
+            sign = 1 if i % 2 == 0 else -1
+            
+            for x in np.linspace(-sign * radius, sign * radius):
+                y = sign * math.sqrt(((radius * radius) - (x * x)))
+                z = 1.0
+                
+                self.send_target([x, y, z])
+                self._sleep(0.5)
+        
+        self._sleep(2)
+        self.send_target([0.0, 0.0, 0.0])
+    
     def _sleep(self, duration: float) -> None:
         """Sleeps for the provided duration in seconds."""
         start = self.__time()
