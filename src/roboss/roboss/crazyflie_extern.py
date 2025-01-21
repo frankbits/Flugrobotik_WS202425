@@ -4,7 +4,7 @@ from threading import Thread
 from typing import List
 
 class CrazyflieExternController(Supervisor):
-    def __init__(self, run):
+    def __init__(self):
         super().__init__()
         print("Crazyflie extern-controller started.")
 
@@ -14,8 +14,10 @@ class CrazyflieExternController(Supervisor):
         self.position_field = self.wb_node.getField('translation')
         self.range_finder = self.wb_node.getField('zrange')
 
-        thread = Thread(target=run)
-        thread.start()      
+        thread = Thread(target=self.run)
+        thread.start()
+
+    def run(self):
         timestep = int(self.getBasicTimeStep())
         while self.step(timestep) != -1:
             pass

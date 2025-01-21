@@ -2,8 +2,8 @@ from SimDroneInterface import SimDroneInterface
 
 
 class DroneController:
-    def __init__(self, run):
-        self.droneInterface = SimDroneInterface(run)
+    def __init__(self):
+        self.droneInterface = SimDroneInterface()
 
         self.last_time = None
         self.ranges = []

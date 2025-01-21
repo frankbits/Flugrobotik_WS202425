@@ -3,8 +3,8 @@ from crazyflie_extern import CrazyflieExternController
 
 
 class SimDroneInterface(DroneInterface, CrazyflieExternController):
-    def __init__(self, run):
-        super().__init__(run) #TODO: (self.run)?
+    def __init__(self):
+        super().__init__()
         print("SimDroneInterface started.")
 
     def takeoff(self) -> None:
