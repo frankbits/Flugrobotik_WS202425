@@ -1,6 +1,6 @@
 from DroneController import DroneController
 from Arena import Arena
-from Renderer import drawBoard
+from Renderer import Renderer
 from route.ShortestPathRoutePlanner import ShortestPathRoutePlanner
 from route.SpiralRoutePlanner import SpiralRoutePlanner
 
@@ -14,10 +14,19 @@ if __name__ == "__main__":
     print("Running")
 
     arena = Arena("../../../bin/arena.json")
-    drawBoard(arena.get_mapped_arena())
+    print(Renderer.drawBoard(arena.get_mapped_arena()))
 
     route = plan_route(arena, (0, 0))
     print('ROUTE', route)
+
+    # animate route on board
+    mappedArena = arena.get_mapped_arena()
+    framesFile = Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors, clear=True)
+    for pos in route:
+        mappedArena[pos[0]][pos[1]] = 'v'
+        Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors)
+        mappedArena[pos[0]][pos[1]] = 'X'
+    Renderer.animate_frames(framesFile)
 
     drone = DroneController()
     start_pos = drone.get_position()

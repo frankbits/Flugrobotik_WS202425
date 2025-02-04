@@ -39,4 +39,4 @@ class Arena:
             self.segments.append(row_segments)
 
     def get_mapped_arena(self):
-        return list(map(lambda x: list(map(lambda y: '#' if isinstance(y, Obstacle) else ' ', x)), self.segments))
+        return list(map(lambda x: list(map(lambda y: '#' if isinstance(y, Obstacle) else ('O' if y.visited else '.'), x)), self.segments))
