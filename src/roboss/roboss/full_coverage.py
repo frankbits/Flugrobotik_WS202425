@@ -1,7 +1,14 @@
 from DroneController import DroneController
 from Arena import Arena
 from Renderer import drawBoard
-from RoutePlanner import RoutePlanner
+from route.ShortestPathRoutePlanner import ShortestPathRoutePlanner
+from route.SpiralRoutePlanner import SpiralRoutePlanner
+
+
+def plan_route(arena: Arena, start_pos: tuple):
+    routePlanner = ShortestPathRoutePlanner(arena, start_pos) # SpiralRoutePlanner(arena, start_pos)
+    route = routePlanner.plan_route()
+    return route
 
 if __name__ == "__main__":
     print("Running")
@@ -9,11 +16,12 @@ if __name__ == "__main__":
     arena = Arena("../../../bin/arena.json")
     drawBoard(arena.get_mapped_arena())
 
+    route = plan_route(arena, (0, 0))
+    print('ROUTE', route)
+
     drone = DroneController()
     start_pos = drone.get_position()
 
-    route = RoutePlanner(arena.segments, start_pos).find_route()
-    print('route', route)
 
     print("Takeoff")
     drone.droneInterface.takeoff()

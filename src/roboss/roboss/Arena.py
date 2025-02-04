@@ -26,6 +26,7 @@ class Arena:
 
         # Mapping für das Fremdmodell
         self.size = parsed_data["arena"]["size"]
+        self.n_fields = 0
         for row in parsed_data["arena"]["segments"]:
             row_segments = []
             for segment in row:
@@ -33,6 +34,7 @@ class Arena:
                     segment = Obstacle()
                 else:
                     segment = Field()
+                    self.n_fields += 1
                 row_segments.append(segment)
             self.segments.append(row_segments)
 
