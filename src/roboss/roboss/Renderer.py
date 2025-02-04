@@ -86,7 +86,7 @@ class Renderer:
         frame = cls.drawBoard(board, colors)
 
         # frames-file
-        frames_filename = f'{filename}.txt'
+        frames_filename = f'frames/{filename}.txt'
 
         # save frames to file
         with open(frames_filename, 'w' if clear else 'a', encoding="utf-8") as f:
