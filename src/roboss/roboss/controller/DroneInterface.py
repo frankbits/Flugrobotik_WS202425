@@ -19,7 +19,7 @@ class DroneInterface(ABC):
         pass
 
     @abstractmethod
-    def get_position(self) -> list[float]:
+    def get_position(self) -> tuple[float, float, float]:
         pass
 
     @abstractmethod

@@ -1,57 +1,54 @@
+from typing import Dict, Callable, Optional
+
+import numpy as np
+
+from DroneInterface import DroneInterface
+from ..config import Config
+
+
 class DroneController:
     def __init__(self, interface):
-        self.controller = interface
-        self.ranges = []
-        self.positions = []
+        self.controller: DroneInterface = interface
+        self.range_map: Dict[tuple[float, float, float], float] = {}
 
-    def save_positions(self, current_pos):
+    def save_range(self, position: tuple[float, float, float]) -> bool:
         """
-        Callback method to save the current position and range data.
+        Saves the current range at the specified position, if it doesn't exist already.
 
-        Args:
-            :param current_pos: The current [x: float, y: float, z: float] position of the drone.
-
-        Returns:
-            bool: True if the position was saved, False otherwise.
+        :param position: The position (x, y, z).
+        :return: True if the position was saved, False otherwise.
         """
-        self.positions.append(current_pos)
-        self.ranges.append(current_pos[2] * 1000 - self.controller.get_range())
+        if position in self.range_map:
+            return False
+
+        self.range_map[position] = position[2] * 1000 - self.controller.get_range()
         return True
 
-    def move_to(self, pos, callback=None, callback_time=None):
+    def move_to(self,
+                target_pos: tuple[float, float, float],
+                callback: Optional[Callable[[tuple[float, float, float]], None]] = None,
+                callback_time: Optional[float] = 0.1) -> None:
         """
-        Moves the Crazyflie drone to the specified position.
+        Moves the drone to the specified position.
 
-        Args:
-            :param pos: The target [x: float, y: float, z: float] position.
-            :param callback: (optional) A callback function to be called during the movement.
-            :param callback_time: (optional) The time interval between callback calls. (if None, callback is called when the position is reached)
+        Note: The callback function, if specified, will be called at least once when the position is reached.
+
+        :param target_pos: The target position (x, y, z).
+        :param callback: An optional callback function to be called during the movement.
+        :param callback_time: The time interval between callback calls, defaults to 0.1.
         """
-        self.controller.send_target(pos)
-        moving = True
+        self.controller.send_target(target_pos)
         last_time = self.controller.get_time()
+        current_pos = self.controller.get_position()
 
-        while moving:
-            current_pos = self.controller.get_position()
+        # Repeat while current position is not equal to target position by 0.1 absolute tolerance
+        while not np.allclose(current_pos, target_pos, atol=Config.Drone.A_TOL):
             current_time = self.controller.get_time()
             delta_time = current_time - last_time
 
             if callback is not None and callback_time is not None and delta_time >= callback_time:
-                callback(delta_time, current_pos)
+                callback(current_pos)
                 last_time = current_time
 
-            if ((abs(pos[0] - current_pos[0]) < .1) and (abs(pos[1] - current_pos[1]) < .1) and (
-                    abs(pos[2] - current_pos[2]) < .1)):
-                moving = False
-                print("arrived: ", current_pos)
-                if callback is not None and callback_time is None:
-                    callback(delta_time, current_pos)
-
-    def get_position(self):
-        """
-        Gets the current position of the drone.
-
-        Returns:
-            list: The current [x: float, y: float, z: float] position of the drone.
-        """
-        return self.controller.get_position()
+        if callback is not None:
+            callback(current_pos)

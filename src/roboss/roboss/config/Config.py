@@ -6,6 +6,10 @@ class Arena:
     OBSTACLE_KEY = "obstacle"
 
 
+class Drone:
+    A_TOL = .1
+
+
 class Flie:
     ID = 0
     SAFEFLIE_NAME = f"safeflie{ID}"
