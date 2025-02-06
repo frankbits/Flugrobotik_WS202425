@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class DroneInterface(ABC):
     @abstractmethod
     def takeoff(self):

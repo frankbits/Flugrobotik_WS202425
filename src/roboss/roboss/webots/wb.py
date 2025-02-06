@@ -17,13 +17,13 @@ import os
 import sys
 
 if sys.platform == 'linux' or sys.platform == 'linux2':
-    path = os.path.join('lib', 'controller', 'libController.so')
+    path = os.path.join('lib', 'webots', 'libController.so')
 elif sys.platform == 'win32':
-    path = os.path.join('lib', 'controller', 'Controller.dll')
+    path = os.path.join('lib', 'webots', 'Controller.dll')
 elif sys.platform == 'darwin':
-    path = os.path.join('Contents', 'lib', 'controller', 'libController.dylib')
+    path = os.path.join('Contents', 'lib', 'webots', 'libController.dylib')
 
 wb = ctypes.cdll.LoadLibrary(os.path.join(os.environ['WEBOTS_HOME'], path))
 
 if sys.platform == 'win32':
-    ctypes.cdll.LoadLibrary(os.path.join(os.environ['WEBOTS_HOME'], 'lib', 'controller', 'generic_robot_window.dll'))
+    ctypes.cdll.LoadLibrary(os.path.join(os.environ['WEBOTS_HOME'], 'lib', 'webots', 'generic_robot_window.dll'))

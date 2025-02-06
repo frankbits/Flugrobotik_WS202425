@@ -1,79 +1,77 @@
 from typing import List
 
-from src.roboss.roboss.DroneInterface import DroneInterface
-
 import rclpy
+from crazyflies_interfaces.msg import SendTarget
 from rclpy.node import Node
 from rclpy.publisher import Publisher
-
 from std_msgs.msg import Empty
-from crazyflies_interfaces.msg import SendTarget
-
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
+from ..config import Config
+from ..controller import DroneInterface
+
+
 class ROSDroneInterface(DroneInterface, Node):
     def __init__(self):
-        super().__init__("tha_flie")
+        super().__init__(Config.Flie.NODE_NAME)
 
-        cf_id = 0
-
-        safeflie_name = f"safeflie{cf_id}"
-        self.tf_name = f"cf{cf_id}"
-        qos_profile = 10
+        self.tf_name = Config.Flie.TF_NAME
 
         self.takeoff_pub: Publisher = self.create_publisher(
-            msg_type=Empty, topic=safeflie_name + "/takeoff", qos_profile=qos_profile
+            msg_type=Empty,
+            topic=Config.Topic.TAKEOFF,
+            qos_profile=Config.Flie.QOS_PROFILE
         )
 
         self.land_pub: Publisher = self.create_publisher(
-            msg_type=Empty, topic=safeflie_name + "/land", qos_profile=qos_profile
+            msg_type=Empty,
+            topic=Config.Topic.LAND,
+            qos_profile=Config.Flie.QOS_PROFILE
         )
 
         self.send_target_pub: Publisher = self.create_publisher(
             msg_type=SendTarget,
-            topic=safeflie_name + "/send_target",
-            qos_profile=qos_profile,
+            topic=Config.Topic.SEND_TARGET,
+            qos_profile=Config.Flie.QOS_PROFILE
         )
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
+        if self.get_position() is None:
+            self.get_logger().info("Couldn't find HOME position!")
+
     def takeoff(self):
         self.takeoff_pub.publish(Empty())
+
+    def land(self):
+        self.land_pub.publish(Empty())
 
     def send_target(self, position) -> None:
         msg = SendTarget()
         msg.target.x, msg.target.y, msg.target.z = position
-        msg.base_frame = "world"
+        msg.base_frame = Config.Flie.BASE_FRAME
         self.send_target_pub.publish(msg)
 
     def get_range(self) -> float:
-        pass #TODO: get range from ROS-Logger logging data from the range sensor
+        pass  # TODO: get range from ROS-Logger logging data from the range sensor
 
-    def get_position(self) -> List[float]|None:
+    def get_position(self) -> List[float] | None:
         try:
-            t = self.tf_buffer.lookup_transform(
-                "world", self.tf_name, rclpy.time.Time()
-            )
-            return [
-                t.transform.translation.x,
-                t.transform.translation.y,
-                t.transform.translation.z,
-            ]
-        except Exception as ex:
+            t = self.tf_buffer.lookup_transform(Config.Flie.BASE_FRAME, self.tf_name, rclpy.time.Time())
+            return [t.transform.translation.x, t.transform.translation.y, t.transform.translation.z]
+        except Exception:
             return None
 
     def get_time(self) -> float:
         """Return current time in seconds."""
         return self.get_clock().now().nanoseconds / 1e9
 
-    def land(self):
-        self.land_pub.publish(Empty())
-
     def _sleep(self, duration: float) -> None:
         """Sleeps for the provided duration in seconds."""
-        start = self.__time()
+        start = self.get_time()
         end = start + duration
-        while self.__time() < end:
+
+        while self.get_time() < end:
             rclpy.spin_once(self, timeout_sec=0)
