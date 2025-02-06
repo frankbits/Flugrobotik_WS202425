@@ -42,10 +42,10 @@ class ROSDroneInterface(DroneInterface, Node):
         if self.get_position() is None:
             self.get_logger().info("Couldn't find HOME position!")
 
-    def takeoff(self):
+    def takeoff(self) -> None:
         self.takeoff_pub.publish(Empty())
 
-    def land(self):
+    def land(self) -> None:
         self.land_pub.publish(Empty())
 
     def send_target(self, position) -> None:
