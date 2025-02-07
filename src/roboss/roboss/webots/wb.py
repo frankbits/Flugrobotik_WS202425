@@ -17,7 +17,7 @@ import os
 import sys
 
 if sys.platform == 'linux' or sys.platform == 'linux2':
-    path = os.path.join('lib', 'webots', 'libController.so')
+    path = os.path.join('lib', 'controller', 'libController.so')
 elif sys.platform == 'win32':
     path = os.path.join('lib', 'webots', 'Controller.dll')
 elif sys.platform == 'darwin':
