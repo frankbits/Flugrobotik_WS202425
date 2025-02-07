@@ -2,8 +2,8 @@ from typing import Dict, Callable, Optional, List
 
 import numpy as np
 
-from controller import DroneInterface
-from config import Config
+import DroneInterface
+from ..config import Config
 
 
 class DroneController:

@@ -1,9 +1,9 @@
-from arena.Arena import Arena
-from config import Config
-from controller.DroneController import DroneController
-from controller.WebotsDroneInterface import WebotsDroneInterface
-from render.Renderer import draw_board
-from route.RoutePlanner import RoutePlanner
+from .arena.Arena import Arena
+from .config import Config
+from .controller.DroneController import DroneController
+from .controller.WebotsDroneInterface import WebotsDroneInterface
+from .render.Renderer import draw_board
+from .route.RoutePlanner import RoutePlanner
 
 def main():
     print("Running")

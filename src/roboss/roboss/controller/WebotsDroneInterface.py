@@ -2,9 +2,9 @@ from typing import List
 
 from threading import Thread
 
-from controller.DroneInterface import DroneInterface
-from config import Config
-from webots import Supervisor
+import DroneInterface
+from ..config import Config
+from ..webots import Supervisor
 
 
 class WebotsDroneInterface(DroneInterface, Supervisor):
