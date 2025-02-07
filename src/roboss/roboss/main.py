@@ -5,7 +5,7 @@ from controller.WebotsDroneInterface import WebotsDroneInterface
 from render.Renderer import draw_board
 from route.RoutePlanner import RoutePlanner
 
-if __name__ == "__main__":
+def main():
     print("Running")
 
     arena = Arena(Config.Arena.PATH)
@@ -20,10 +20,13 @@ if __name__ == "__main__":
     print("Takeoff")
     drone.controller.takeoff()
     print("Sending target (1,1,1)")
-    drone.move_to((1.0, 1.0, 1.0))
+    drone.move_to([1.0, 1.0, 1.0])
     print("Getting range and position")
     print(drone.controller.get_range(), drone.controller.get_position())
     print("Sending target (2,2,2)")
-    drone.move_to((2, 2, 2))
+    drone.move_to([2, 2, 2])
     print("Landing")
     drone.controller.land()
+
+if __name__ == "__main__":
+    main()
