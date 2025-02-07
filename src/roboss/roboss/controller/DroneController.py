@@ -1,17 +1,17 @@
-from typing import Dict, Callable, Optional
+from typing import Dict, Callable, Optional, List
 
 import numpy as np
 
-from DroneInterface import DroneInterface
-from ..config import Config
+from controller import DroneInterface
+from config import Config
 
 
 class DroneController:
     def __init__(self, interface):
         self.controller: DroneInterface = interface
-        self.range_map: Dict[tuple[float, float, float], float] = {}
+        self.range_map: Dict[List[float], float] = {}
 
-    def save_range(self, position: tuple[float, float, float]) -> bool:
+    def save_range(self, position: List[float]) -> bool:
         """
         Saves the current range at the specified position, if it doesn't exist already.
 
@@ -25,8 +25,8 @@ class DroneController:
         return True
 
     def move_to(self,
-                target_pos: tuple[float, float, float],
-                callback: Optional[Callable[[tuple[float, float, float]], None]] = None,
+                target_pos: List[float],
+                callback: Optional[Callable[[List[float]], None]] = None,
                 callback_time: Optional[float] = 0.1) -> None:
         """
         Moves the drone to the specified position.
@@ -49,6 +49,8 @@ class DroneController:
             if callback is not None and callback_time is not None and delta_time >= callback_time:
                 callback(current_pos)
                 last_time = current_time
+            
+            current_pos = self.controller.get_position()
 
         if callback is not None:
             callback(current_pos)
