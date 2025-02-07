@@ -13,6 +13,8 @@ alias build="colcon build"
 alias cfclient="python3 crazyflie-clients-python/bin/cfclient"
 # Specify controller python script at the end
 alias webots-controller="$WEBOTS_HOME/webots-controller --protocol=tcp --ip-address=127.0.0.1 --port=1234 --robot-name=cf0_ros_ctrl"
+# ros2 run roboss roboss
 
+source ~/ds-crazyflies/install/setup.bash
 source /opt/ros/humble/setup.bash
 source ./install/setup.bash
