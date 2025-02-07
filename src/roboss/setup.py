@@ -25,6 +25,6 @@ setup(
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': ["roboss = roboss.flie:main"],
+        'console_scripts': ["roboss = roboss.main:main"],
     },
 )
