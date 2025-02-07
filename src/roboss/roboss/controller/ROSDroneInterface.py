@@ -8,15 +8,13 @@ from std_msgs.msg import Empty
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
-import DroneInterface
+from .DroneInterface import DroneInterface
 from ..config import Config
 
 
 class ROSDroneInterface(DroneInterface, Node):
     def __init__(self):
         super().__init__(Config.Flie.NODE_NAME)
-
-        self.tf_name = Config.Flie.TF_NAME
 
         self.takeoff_pub: Publisher = self.create_publisher(
             msg_type=Empty,
@@ -39,9 +37,6 @@ class ROSDroneInterface(DroneInterface, Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        if self.get_position() is None:
-            self.get_logger().info("Couldn't find HOME position!")
-
     def takeoff(self) -> None:
         self.takeoff_pub.publish(Empty())
 
@@ -59,17 +54,15 @@ class ROSDroneInterface(DroneInterface, Node):
 
     def get_position(self) -> List[float] | None:
         try:
-            t = self.tf_buffer.lookup_transform(Config.Flie.BASE_FRAME, self.tf_name, rclpy.time.Time())
+            t = self.tf_buffer.lookup_transform(Config.Flie.BASE_FRAME, Config.Flie.TF_NAME, rclpy.time.Time())
             return [t.transform.translation.x, t.transform.translation.y, t.transform.translation.z]
         except Exception:
             return None
 
     def get_time(self) -> float:
-        """Return current time in seconds."""
         return self.get_clock().now().nanoseconds / 1e9
 
-    def _sleep(self, duration: float) -> None:
-        """Sleeps for the provided duration in seconds."""
+    def sleep(self, duration: float) -> None:
         start = self.get_time()
         end = start + duration
 
