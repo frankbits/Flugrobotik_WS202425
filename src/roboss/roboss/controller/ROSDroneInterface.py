@@ -62,6 +62,7 @@ class ROSDroneInterface(DroneInterface, Node):
     def get_time(self) -> float:
         return self.get_clock().now().nanoseconds / 1e9
 
+    # MUST BE CALLED to update the TF_BUFFER and thus POSITION of the drone
     def sleep(self, duration: float) -> None:
         start = self.get_time()
         end = start + duration
