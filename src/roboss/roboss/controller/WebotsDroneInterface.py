@@ -1,8 +1,10 @@
+from typing import List
+
 from threading import Thread
 
-from DroneInterface import DroneInterface
-from ..config import Config
-from ..webots.supervisor import Supervisor
+from controller.DroneInterface import DroneInterface
+from config import Config
+from webots import Supervisor
 
 
 class WebotsDroneInterface(DroneInterface, Supervisor):
@@ -10,7 +12,7 @@ class WebotsDroneInterface(DroneInterface, Supervisor):
         super().__init__()
         print("WebotsDroneInterface started.")
 
-        self.wb_node = super.getSelf().getParentNode()
+        self.wb_node = super().getSelf().getParentNode()
 
         self.target_field = self.wb_node.getField(Config.Field.TARGET)
         self.position_field = self.wb_node.getField(Config.Field.TRANSLATION)
@@ -40,7 +42,7 @@ class WebotsDroneInterface(DroneInterface, Supervisor):
     def get_range(self) -> float:
         return self.range_finder.getSFFloat()
 
-    def get_position(self) -> list[float]:
+    def get_position(self) -> List[float]:
         return self.position_field.getSFVec3f()
 
     def get_time(self) -> float:

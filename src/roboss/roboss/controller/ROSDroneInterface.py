@@ -8,8 +8,8 @@ from std_msgs.msg import Empty
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
-from DroneInterface import DroneInterface
-from ..config import Config
+from controller import DroneInterface
+from config import Config
 
 
 class ROSDroneInterface(DroneInterface, Node):

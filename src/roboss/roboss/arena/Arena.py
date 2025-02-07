@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from typing import List
 
-from ..config import Config
+from config import Config
 
 
 @dataclass

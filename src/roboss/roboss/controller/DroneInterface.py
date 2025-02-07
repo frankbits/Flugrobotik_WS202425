@@ -1,3 +1,5 @@
+from typing import List
+
 from abc import ABC, abstractmethod
 
 
@@ -17,7 +19,7 @@ class DroneInterface(ABC):
         pass
 
     @abstractmethod
-    def send_target(self, position: tuple[float, float, float]) -> None:
+    def send_target(self, position: List[float]) -> None:
         """
         Sends a target position to the drone.
         :param position: The target position (x, y, z).
@@ -34,7 +36,7 @@ class DroneInterface(ABC):
         pass
 
     @abstractmethod
-    def get_position(self) -> tuple[float, float, float]:
+    def get_position(self) -> List[float]:
         """
         Returns the position of the drone.
         :return: The current position (x, y, z).

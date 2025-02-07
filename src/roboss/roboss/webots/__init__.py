@@ -12,42 +12,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from controller.field import Field                             # noqa
-from controller.node import Node, ContactPoint                 # noqa
-from controller.ansi_codes import AnsiCodes                    # noqa
-from controller.accelerometer import Accelerometer             # noqa
-from controller.altimeter import Altimeter                     # noqa
-from controller.brake import Brake                             # noqa
-from controller.camera import Camera, CameraRecognitionObject  # noqa
-from controller.compass import Compass                         # noqa
-from controller.connector import Connector                     # noqa
-from controller.display import Display                         # noqa
-from controller.distance_sensor import DistanceSensor          # noqa
-from controller.emitter import Emitter                         # noqa
-from controller.gps import GPS                                 # noqa
-from controller.gyro import Gyro                               # noqa
-from controller.inertial_unit import InertialUnit              # noqa
-from controller.led import LED                                 # noqa
-from controller.lidar import Lidar                             # noqa
-from controller.lidar_point import LidarPoint                  # noqa
-from controller.light_sensor import LightSensor                # noqa
-from controller.motor import Motor                             # noqa
-from controller.position_sensor import PositionSensor          # noqa
-from controller.radar import Radar                             # noqa
-from controller.radar_target import RadarTarget                # noqa
-from controller.range_finder import RangeFinder                # noqa
-from controller.receiver import Receiver                       # noqa
-from controller.robot import Robot                             # noqa
-from controller.skin import Skin                               # noqa
-from controller.speaker import Speaker                         # noqa
-from controller.supervisor import Supervisor                   # noqa
-from controller.touch_sensor import TouchSensor                # noqa
-from controller.vacuum_gripper import VacuumGripper            # noqa
-from controller.keyboard import Keyboard                       # noqa
-from controller.mouse import Mouse                             # noqa
-from controller.mouse import MouseState                        # noqa
-from controller.joystick import Joystick                       # noqa
-from controller.motion import Motion                           # noqa
+from webots.field import Field                             # noqa
+from webots.node import Node, ContactPoint                 # noqa
+from webots.ansi_codes import AnsiCodes                    # noqa
+from webots.accelerometer import Accelerometer             # noqa
+from webots.altimeter import Altimeter                     # noqa
+from webots.brake import Brake                             # noqa
+from webots.camera import Camera, CameraRecognitionObject  # noqa
+from webots.compass import Compass                         # noqa
+from webots.connector import Connector                     # noqa
+from webots.display import Display                         # noqa
+from webots.distance_sensor import DistanceSensor          # noqa
+from webots.emitter import Emitter                         # noqa
+from webots.gps import GPS                                 # noqa
+from webots.gyro import Gyro                               # noqa
+from webots.inertial_unit import InertialUnit              # noqa
+from webots.led import LED                                 # noqa
+from webots.lidar import Lidar                             # noqa
+from webots.lidar_point import LidarPoint                  # noqa
+from webots.light_sensor import LightSensor                # noqa
+from webots.motor import Motor                             # noqa
+from webots.position_sensor import PositionSensor          # noqa
+from webots.radar import Radar                             # noqa
+from webots.radar_target import RadarTarget                # noqa
+from webots.range_finder import RangeFinder                # noqa
+from webots.receiver import Receiver                       # noqa
+from webots.robot import Robot                             # noqa
+from webots.skin import Skin                               # noqa
+from webots.speaker import Speaker                         # noqa
+from webots.supervisor import Supervisor                   # noqa
+from webots.touch_sensor import TouchSensor                # noqa
+from webots.vacuum_gripper import VacuumGripper            # noqa
+from webots.keyboard import Keyboard                       # noqa
+from webots.mouse import Mouse                             # noqa
+from webots.mouse import MouseState                        # noqa
+from webots.joystick import Joystick                       # noqa
+from webots.motion import Motion                           # noqa
 
 __all__ = [
     Accelerometer, Altimeter, AnsiCodes, Brake, Camera, CameraRecognitionObject, Compass, Connector, ContactPoint, Display,
