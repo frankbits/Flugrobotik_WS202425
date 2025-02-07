@@ -1,5 +1,6 @@
 from typing import List
 
+import time
 from threading import Thread
 
 import DroneInterface
@@ -47,3 +48,6 @@ class WebotsDroneInterface(DroneInterface, Supervisor):
 
     def get_time(self) -> float:
         return self.getTime()
+    
+    def sleep(self, duration) -> None:
+        time.sleep(duration)
