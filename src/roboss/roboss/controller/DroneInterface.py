@@ -50,3 +50,12 @@ class DroneInterface(ABC):
         :return: Seconds.
         """
         pass
+    
+    @abstractmethod
+    def sleep(self, duration: float) -> None:
+        """
+        Sleeps for the specified duration in seconds.
+
+        :param duration: The duration in seconds.
+        """
+        pass
