@@ -2,7 +2,7 @@ from typing import Dict, Callable, Optional, List
 
 import numpy as np
 
-import DroneInterface
+from . import DroneInterface
 from ..config import Config
 
 
@@ -43,6 +43,7 @@ class DroneController:
 
         # Repeat while current position is not equal to target position by 0.1 absolute tolerance
         while not np.allclose(current_pos, target_pos, atol=Config.Drone.A_TOL):
+            self.controller.sleep(0.1)
             current_time = self.controller.get_time()
             delta_time = current_time - last_time
 
