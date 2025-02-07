@@ -1,5 +1,5 @@
 class Arena:
-    PATH = "/bin/arena.json"
+    PATH = "../../../bin/arena.json"
     ARENA_KEY = "arena"
     SIZE_KEY = "size"
     SEGMENTS_KEY = "segments"
