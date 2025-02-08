@@ -8,6 +8,10 @@ class Arena:
 
 class Drone:
     A_TOL = .1
+    WIDTH = .2
+    # Defines the swaths width, should be the diameter of the Range Finder sensor spread
+    OPERATIONAL_WIDTH = 0.7
+    SPIRAL_SIZE = 6
 
 
 class Flie:
