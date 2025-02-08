@@ -1,5 +1,5 @@
 class Arena:
-    PATH = "/home/rosrunner/Documents/Flugrobotik/TeamRoboss/Flugrobotik_WS202425/bin/arena.json"
+    PATH = "../../../bin/arena.json"
     ARENA_KEY = "arena"
     SIZE_KEY = "size"
     SEGMENTS_KEY = "segments"

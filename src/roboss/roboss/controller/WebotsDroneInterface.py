@@ -3,9 +3,9 @@ from typing import List
 import time
 from threading import Thread
 
-import DroneInterface
-from ..config import Config
-from ..webots import Supervisor
+from .DroneInterface import DroneInterface
+from config import Config
+from webots import Supervisor
 
 
 class WebotsDroneInterface(DroneInterface, Supervisor):

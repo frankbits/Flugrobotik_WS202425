@@ -3,7 +3,7 @@ from typing import Dict, Callable, Optional, List
 import numpy as np
 
 from . import DroneInterface
-from ..config import Config
+from config import Config
 
 
 class DroneController:
