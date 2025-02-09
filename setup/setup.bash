@@ -10,7 +10,7 @@ alias land="ros2 topic pub /safeflie0/takeoff std_msgs/Empty --once"
 alias launch-webots="ros2 launch roboss tha_framework.launch.py type:=2 backend:=webots id:=0"
 alias launch-hardware="ros2 launch roboss tha_framework.launch.py type:=1 backend:=hardware"
 alias build="colcon build"
-alias cfclient="python3 crazyflie-clients-python/bin/cfclient"
+alias cfclient="python3 ~/crazyflie-clients-python/bin/cfclient"
 # Specify controller python script at the end
 alias webots-controller="$WEBOTS_HOME/webots-controller --protocol=tcp --ip-address=127.0.0.1 --port=1234 --robot-name=cf0_ros_ctrl"
 # ros2 run roboss roboss
