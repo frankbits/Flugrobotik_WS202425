@@ -1,11 +1,44 @@
 import rclpy
-from .arena.Arena import Arena
+from .arena.Arena import Arena, Obstacle
 from .config import Config
 from .controller.DroneController import DroneController
 from .controller.ROSDroneInterface import ROSDroneInterface
 from .render.Renderer import draw_board
 from .route.F2CRoute import F2CRoute
+from .render.Plotter import Plotter
 
+def plot_heights(arena: Arena):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    plotter = Plotter()
+
+    # Create a grid of x and y values.
+    xs = np.linspace(0, arena.size, arena.size)
+    ys = np.linspace(0, arena.size, arena.size)
+    X, Y = np.meshgrid(xs, ys)
+    x, y = X.ravel(), Y.ravel()
+
+    # Initialize Z values to NaN. (NaN-values will be interpolated)
+    Z = np.full(X.shape, np.nan)
+
+    # Populate Z values with max-height for obstacles and 0 for fields.
+    for i in range(arena.size):
+        for j in range(arena.size):
+            if isinstance(arena.segments[i][j], Obstacle):
+                Z[i][j] = 10
+            else:
+                Z[i][j] = arena.segments[i][j].height
+
+    z = Z.ravel()
+
+    axes_image = plotter.add_plot_range_3d_bar(x, y, z, "3D-Höhenprofil")
+
+    # show colorbar
+    plt.colorbar(axes_image)
+
+    # Show the figure
+    plotter.plot()
 
 def main():
     print("Running")
@@ -47,6 +80,7 @@ def main():
     print("Plotting Ranges")
     
     print(drone.range_map)
+    plot_heights(arena)
 
     try:
         while rclpy.ok():
