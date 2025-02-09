@@ -5,6 +5,7 @@ class Arena:
     SEGMENTS_KEY = "segments"
     OBSTACLE_KEY = "obstacle"
     SEGMENT_SIZE = 0.2
+    SIZE = 1.45
 
 
 class Drone:
@@ -19,7 +20,7 @@ class Drone:
 
 
 class Flie:
-    ID = 0
+    ID = 1
     SAFEFLIE_NAME = f"safeflie{ID}"
     TF_NAME = f"cf{ID}"
     NODE_NAME = "tha_flie"
