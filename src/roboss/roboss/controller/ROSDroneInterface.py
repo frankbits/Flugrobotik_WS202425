@@ -53,15 +53,22 @@ class ROSDroneInterface(DroneInterface, Node):
 
     def get_range(self) -> float:
         # TODO: get range from ROS-Logger logging data from the range sensor
-        # loggingClient = LoggingClient(self)
-        # logBlock: LogBlockClient = loggingClient.create_log_block(["range.zrange"], 'height', (lambda x: self.get_logger().info("HEIGHT: " + x)))
-        # logBlock.start_log_block()
         pass
 
-    def get_position(self) -> List[float] | None:
+    def set_range_callback(self, callback):
+        prefix = "/cf{}".format(Config.Flie.ID)
+        loggingClient = LoggingClient(self, prefix)
+        logBlock: LogBlockClient = loggingClient.create_log_block(["range.zrange"], "range", callback)
+        logBlock.start_log_block(100)
+        self.logBlock = logBlock
+
+    def stop_range_callback(self):
+        self.logBlock.stop_log_block()
+
+    def get_position(self) -> tuple[float] | None:
         try:
             t = self.tf_buffer.lookup_transform(Config.Flie.BASE_FRAME, Config.Flie.TF_NAME, rclpy.time.Time())
-            return [t.transform.translation.x, t.transform.translation.y, t.transform.translation.z]
+            return tuple([t.transform.translation.x, t.transform.translation.y, t.transform.translation.z])
         except Exception:
             return None
 

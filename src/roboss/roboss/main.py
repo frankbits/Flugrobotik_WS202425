@@ -29,8 +29,12 @@ def main():
 
     print("Flying path")
 
+    drone.controller.set_range_callback(lambda x: drone.save_range(drone.controller.get_position(), x[0]))
+
     for state in path.getStates():
         drone.move_to([state.point.X(), state.point.Y(), 1.0], lambda pos: drone.controller.get_range())
+
+    drone.controller.stop_range_callback()
 
     print("Resetting and landing")
 
@@ -39,6 +43,10 @@ def main():
     drone.controller.sleep(4)
 
     print("Finished")
+
+    print("Plotting Ranges")
+    
+    print(drone.range_map)
 
     try:
         while rclpy.ok():
