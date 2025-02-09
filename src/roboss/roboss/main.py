@@ -15,7 +15,7 @@ def main():
 
     print("Calculating path")
 
-    path = F2CRoute.test()
+    path = F2CRoute.getRoute(arena.get_obstacles())
 
     rclpy.init()
 
