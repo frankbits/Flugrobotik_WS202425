@@ -5,51 +5,76 @@ import fields2cover as f2c
 from ..config import Config
 
 
-class F2CRoute():
-    def decomp_cells_nswath_spiral_dubinscurvescc(start=None) -> F2CPath:
-        if start is None:
-            start = [0.0, 0.0, 0.0]
-
-        start_point = f2c.Point(start[0], start[1], start[2])
+class F2CRoute:
+    def test():
         robot = f2c.Robot(Config.Drone.WIDTH, Config.Drone.OPERATIONAL_WIDTH)
-        cells = f2c.Cells(f2c.Cell(f2c.LinearRing(f2c.VectorPoint(
-            [
-                f2c.Point(0, 0),
-                f2c.Point(1, 0),
-                f2c.Point(0, 1),
-                f2c.Point(1, 1),
-            ]
-        ))))
+        robot.setMinTurningRadius(Config.Drone.MIN_TURNING_RADIUS)
+        robot.setMaxDiffCurv(Config.Drone.MIN_TURNING_RADIUS)
 
-        # robot.setMinTurningRadius(2)  # m
-        # robot.setMaxDiffCurv(0.1);  # 1/m^2
+        field = [(-2.0, -2.0), (2.0, -2.0), (2.0, 2.0), (-2.0, 2.0), (-2.0, 2.0)]
+        obstacle1 = [(1.0, 1.0), (1.2, 1.0), (1.2, 1.2), (1.0, 1.2), (1.0, 1.0)]
+        obstacle2 = [
+            (-1.0, -1.0),
+            (-1.2, -1.0),
+            (-1.2, -1.2),
+            (-1.0, -1.2),
+            (-1.0, -1.0),
+        ]
+        obstacle3 = [
+            (-0.75, 0.25),
+            (-0.55, 0.25),
+            (-0.55, 0.45),
+            (-0.75, 0.45),
+            (-0.75, 0.25),
+        ]
 
-        # Cellular Decompisition
-        decomp = f2c.DECOMP_TrapezoidalDecomp()
-        decomp.setSplitAngle(0.5 * math.pi)
-        decomp_cell = decomp.decompose(cells)
+        cells = f2c.Cells(f2c.Cell(_createLinearRing(field)))
+        cells.addRing(0, _createLinearRing(obstacle1))
+        cells.addRing(0, _createLinearRing(obstacle2))
+        cells.addRing(0, _createLinearRing(obstacle3))
 
-        # Generate Headlands from decomposed cells
-        const_hl = f2c.HG_Const_gen()
-        no_hl = const_hl.generateHeadlands(decomp_cell, 0.0)
+        # decomposer = f2c.DECOMP_TrapezoidalDecomp()
+        # decomposer.setSplitAngle(0.5 * math.pi)
+        # cells = decomposer.decompose(cells)
 
-        # Generate the best swaths by brute forcing through all possible computations and minimizing turns
-        n_swath = f2c.OBJ_NSwath()
-        bf = f2c.SG_BruteForce()
-        swaths = bf.generateBestSwaths(n_swath, robot.getCovWidth(), no_hl.getGeometry(0))
+        headland_generator = f2c.HG_Const_gen()
+        midland = headland_generator.generateHeadlands(cells, 0.1)
+        # cells = decomposer.decompose(midland)
+        mainland = headland_generator.generateHeadlands(cells, 0.2)
 
-        # Sort the swaths in a spiral pattern
-        sorter = f2c.RP_Spiral(Config.Drone.SPIRAL_SIZE)
-        swaths = sorter.genSortedSwaths(swaths)
+        objective_function = f2c.OBJ_FieldCoverage()
+        swath_generator = f2c.SG_BruteForce()
 
-        # Plan the route
+        swaths = swath_generator.generateBestSwaths(
+            objective_function, robot.getCovWidth(), mainland
+        )
+
+        # swath_sorter = f2c.RP_Spiral(6)
+        # swaths = swath_sorter.genSortedSwaths(swaths)
+
         route_planner = f2c.RP_RoutePlannerBase()
-        route_planner.setStartAndEndPoint(start_point)
-        route = route_planner.genRoute(const_hl, swaths)
+        route_planner.setStartAndEndPoint(
+            f2c.Point(Config.Drone.INITIAL_X, Config.Drone.INITIAL_Y)
+        )
+        route = route_planner.genRoute(midland, swaths)
 
-        # Plan the path and apply Dubin's curves with continuous curvature
+        turning_base = f2c.PP_DubinsCurves()
         path_planner = f2c.PP_PathPlanning()
-        dubins_cc = f2c.PP_DubinsCurvesCC()
-        path = path_planner.planPath(robot, route, dubins_cc)
+        path = path_planner.planPath(robot, route, turning_base)
+
+        f2c.Visualizer.figure()
+        f2c.Visualizer.plot(cells)
+        f2c.Visualizer.plot(mainland)
+        f2c.Visualizer.plot(path)
+        f2c.Visualizer.save(
+            "/home/rosrunner/Documents/Flugrobotik/TeamRoboss/Flugrobotik_WS202425/path_test.png"
+        )
 
         return path
+
+
+def _createLinearRing(field):
+    points = f2c.VectorPoint()
+    for x, y in field:
+        points.push_back(f2c.Point(x, y))
+    return f2c.LinearRing(points)
