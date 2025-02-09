@@ -9,7 +9,7 @@ from ..config import Config
 class DroneController:
     def __init__(self, interface):
         self.controller: DroneInterface = interface
-        self.range_map: Dict[List[float], float] = {}
+        self.range_map: Dict[tuple[float], float] = {}
 
     def save_range(self, position: tuple[float], range: float) -> bool:
         """
