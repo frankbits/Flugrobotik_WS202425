@@ -123,7 +123,7 @@ class Robot:
 
     def __init__(self):
         if Robot.created:
-            print('Error: only one Robot instance can be created per controller process.', file=sys.stderr)
+            print('Error: only one Robot instance can be created per webots process.', file=sys.stderr)
             return
         Robot.created = self
         wb.wb_robot_init()
