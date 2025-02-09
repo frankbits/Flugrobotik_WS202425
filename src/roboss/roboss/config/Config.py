@@ -5,14 +5,14 @@ class Arena:
     SEGMENTS_KEY = "segments"
     OBSTACLE_KEY = "obstacle"
     SEGMENT_SIZE = 0.2
-    SIZE = 1.45
+    SIZE = 1.4
 
 
 class Drone:
     A_TOL = 0.3
     WIDTH = 0.115
     # Defines the swaths width, should be the diameter of the Range Finder sensor spread
-    OPERATIONAL_WIDTH = WIDTH * 2
+    OPERATIONAL_WIDTH = WIDTH
     MIN_TURNING_RADIUS = 0.05
     MAX_DIFF_CURV = 0.25
     INITIAL_X = 0.0
