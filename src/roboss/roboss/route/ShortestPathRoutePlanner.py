@@ -1,6 +1,4 @@
-from shapely.measurement import distance
-
-from Arena import Arena, Field
+from ..arena.Arena import Arena, Field
 
 from .RoutePlanner import RoutePlanner
 

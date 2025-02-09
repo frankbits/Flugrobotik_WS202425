@@ -3,27 +3,17 @@
 import os
 import subprocess
 
-class Renderer:
-    COLORS = {
-        'black': 30,
-        'red': 31,
-        'green': 32,
-        'yellow': 33,
-        'blue': 34,
-        'magenta': 35,
-        'cyan': 36,
-        'grey': 37,
-        'white': 38
-    }
+from ..config import Config
 
+class Renderer:
     defaultColors = {
-        'X': COLORS['magenta'],
-        '#': COLORS['blue'],
-        '^': COLORS['red'],
-        '>': COLORS['red'],
-        '<': COLORS['red'],
-        'v': COLORS['red'],
-        '': COLORS['white'] # default color
+        'X': Config.Render.Color.MAGENTA,
+        '#': Config.Render.Color.BLUE,
+        '^': Config.Render.Color.RED,
+        '>': Config.Render.Color.RED,
+        '<': Config.Render.Color.RED,
+        'v': Config.Render.Color.RED,
+        '': Config.Render.Color.WHITE # default color
     }
 
     @classmethod
@@ -121,7 +111,7 @@ class Renderer:
         """
         subprocess.Popen(
             # Run the selected script with the selected input file
-            ['cmd', '/k', 'animation.py', frames_file],
+            ['cmd', '/k', Config.Render.ANIMATION_FILEPATH, frames_file],
             # Add the project folder to the python path
             env={**os.environ, 'PYTHONPATH': os.path.abspath(os.path.dirname(__file__))},
             # Open a new console window
