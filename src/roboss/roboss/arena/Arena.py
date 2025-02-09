@@ -30,17 +30,58 @@ class Arena:
         self.size = parsed_data[Config.Arena.ARENA_KEY][Config.Arena.SIZE_KEY]
         self.segments = [
             [
-                Obstacle() if segment[Config.Arena.OBSTACLE_KEY] else Field() for segment in row
-            ] for row in parsed_data[Config.Arena.ARENA_KEY][Config.Arena.SEGMENTS_KEY]
+                Obstacle() if segment[Config.Arena.OBSTACLE_KEY] else Field()
+                for segment in row
+            ]
+            for row in parsed_data[Config.Arena.ARENA_KEY][Config.Arena.SEGMENTS_KEY]
         ]
 
-    def get_mapped_arena(self):
+    def get_obstacles(self) -> List[List[float]]:
+        """
+        Returns the cartesian coordinates of all the obstacles in the arena.
+
+        :return: All obstacle coordinates
+        """
+        obstacles: List[List[float]] = []
+
+        for row_index, row in enumerate(self.segments):
+            for column_index, segment in enumerate(row):
+                if isinstance(segment, Obstacle):
+                    y: float = self.map_to_cartesian(row_index)
+                    x: float = self.map_to_cartesian(column_index)
+                    obstacles.append([x, y])
+
+        return obstacles
+
+    def get_mapped_arena(self) -> List[List[str]]:
+        """
+        Maps the current arena segments to their character representations.
+
+        :return: The character representation of the arena.
+        """
         return list(
             map(
-                lambda x:
-                list(
-                    map(lambda y: Config.Render.OBSTACLE if isinstance(y, Obstacle) else Config.Render.EMPTY, x)
+                lambda x: list(
+                    map(
+                        lambda y: (
+                            Config.Render.OBSTACLE
+                            if isinstance(y, Obstacle)
+                            else Config.Render.EMPTY
+                        ),
+                        x,
+                    )
                 ),
-                self.segments
+                self.segments,
             )
+        )
+
+    def map_to_cartesian(self, index) -> float:
+        """
+        Maps the given segment index to real cartesian coordinate.
+
+        :param index: The segment index
+        :return: Cartesian coordinate
+        """
+        return -Config.Arena.SIZE + (
+            index / float(self.size - 1) * (Config.Arena.SIZE * 2)
         )
