@@ -43,7 +43,9 @@ class Topic:
 
 class Render:
     OBSTACLE = "#"
-    EMPTY = " "
+    EMPTY = "."
+    EMPTY_VISITED = "O"
+    DRONE = "v" # directional drone: "^", ">", "v", "<"
 
     class Color:
         BLACK = 30
@@ -55,3 +57,5 @@ class Render:
         CYAN = 36
         GREY = 37
         WHITE = 38
+
+    ANIMATION_FILEPATH = "/home/rosrunner/Documents/Flugrobotik/TeamRoboss/Flugrobotik_WS202425/src/roboss/roboss/render/animation.py"
