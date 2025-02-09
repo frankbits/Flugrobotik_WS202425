@@ -1,5 +1,5 @@
 class Arena:
-    PATH = "/home/rosrunner/Documents/Flugrobotik/TeamRoboss/Flugrobotik_WS202425/bin/arena.json"
+    PATH = "/home/rosrunner/Documents/Flugrobotik_WS202425/bin/arena.json"
     ARENA_KEY = "arena"
     SIZE_KEY = "size"
     SEGMENTS_KEY = "segments"
@@ -19,7 +19,7 @@ class Drone:
 
 
 class Flie:
-    ID = 0
+    ID = 1
     SAFEFLIE_NAME = f"safeflie{ID}"
     TF_NAME = f"cf{ID}"
     NODE_NAME = "tha_flie"

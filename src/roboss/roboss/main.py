@@ -30,7 +30,7 @@ def main():
     print("Flying path")
 
     for state in path.getStates():
-        drone.move_to([state.point.X(), state.point.Y(), 1.0])
+        drone.move_to([state.point.X(), state.point.Y(), 1.0], lambda pos: drone.controller.get_range())
 
     print("Resetting and landing")
 
