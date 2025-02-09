@@ -178,3 +178,6 @@ log/
 
 # Webots-Controller
 webots-controller.exe
+
+# Animation-Files
+src/roboss/roboss/frames/
