@@ -81,8 +81,10 @@ def main():
     print("Plotting Ranges")
     
     print(drone.range_map)
-    plot_heights(arena)
-    plot_range(2, list(drone.range_map.keys()), list(drone.range_map.values()))
+    # plot_heights(arena) # only showing obstacles with full height 
+    # TODO: use plot_heights() with Plotter.add_plot_range_3d_bar() (bar3d) instead of add_plot_range_3d() (plot_surface)
+    # TODO: better calculation of rangeValues: more measurePoints (ROSDroneInterface l62), are 10 interpolate-steps in plot_range() correct?
+    plot_range(2, list(drone.range_map.keys()), list(drone.range_map.values()), 10)
 
     try:
         while rclpy.ok():
