@@ -110,7 +110,7 @@ def main() -> None:
     print("Plotting Ranges")
     print(drone.range_map)
     # plot_heights(arena) # only showing obstacles with full height
-    plot_range(2, list(drone.range_map.keys()), list(drone.range_map.values()), 10)
+    plot_range(2, list(map(lambda pos: (pos[0], pos[1]), drone.range_map.keys())), list(drone.range_map.values()), 10)
 
     try:
         while rclpy.ok():
