@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, List
 
 
 class RoutePlanner(ABC):
@@ -17,11 +17,14 @@ class RoutePlanner(ABC):
     """
 
     @abstractmethod
-    def plan_route(self) -> Any:
+    def plan_route(self, obstacles: List[List[float]]) -> Any:
         """
         Plan a route based on the specific logic implemented in the subclass.
 
         This is an abstract method and must be implemented by subclasses.
+
+        Parameters:
+            obstacles (List[List[float]]): List of obstacle positions (x, y).
 
         Returns
         -------

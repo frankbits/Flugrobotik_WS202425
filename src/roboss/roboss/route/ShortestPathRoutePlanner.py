@@ -49,7 +49,7 @@ class ShortestPathRoutePlanner(RoutePlanner):
         self.arena = arena
         self.startPos = start_pos
 
-    def plan_route(self) -> List[Tuple[int, int]]:
+    def plan_route(self, obstacles: List[List[float]]) -> List[Tuple[int, int]]:
         """
         Plans the shortest route covering all unvisited fields in the arena.
 
