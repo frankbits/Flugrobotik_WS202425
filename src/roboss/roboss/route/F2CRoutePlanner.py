@@ -1,8 +1,8 @@
 """
-Module: F2CRoute
+Module: F2CRoutePlanner
 Provides functionality to generate an optimized field coverage path using Fields2Cover.
 
-This module defines the `F2CRoute` class, which:
+This module defines the `F2CRoutePlanner` class, which:
 - Sets up a `Robot` with specific movement constraints.
 - Defines a flight area while considering obstacles.
 - Computes an optimized path using brute-force swath generation and Dubins curves.
@@ -17,10 +17,11 @@ from typing import List, Tuple
 
 import fields2cover as f2c
 
+from .RoutePlanner import RoutePlanner
 from ..config import Config
 
 
-class F2CRoute:
+class F2CRoutePlanner(RoutePlanner):
     """
     Computes an optimized coverage path while avoiding obstacles.
 
@@ -33,8 +34,7 @@ class F2CRoute:
             Computes and returns an optimized field coverage path while avoiding obstacles.
     """
 
-    @staticmethod
-    def get_route(obstacles: List[List[float]]) -> f2c.Path:
+    def plan_route(self, obstacles: List[List[float]]) -> f2c.Path:
         """
         Calculates and returns the path while avoiding specified obstacles.
 

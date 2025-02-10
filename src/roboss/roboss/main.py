@@ -11,7 +11,7 @@ from .controller.DroneController import DroneController
 from .controller.ROSDroneInterface import ROSDroneInterface
 from .render.Plotter import Plotter
 from .render.Renderer import Renderer
-from .route.F2CRoute import F2CRoute
+from .route.F2CRoutePlanner import F2CRoutePlanner
 from .util import plot_range
 
 
@@ -70,7 +70,7 @@ def main() -> None:
     print(Renderer.draw_board(arena.get_mapped_arena()))
     print("Calculating path")
 
-    path = F2CRoute.get_route(arena.get_obstacles())
+    path = F2CRoutePlanner.plan_route(arena.get_obstacles())
 
     rclpy.init()
 
