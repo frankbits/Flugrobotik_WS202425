@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.interpolate import griddata
@@ -5,37 +7,42 @@ from scipy.interpolate import griddata
 from .render.Plotter import Plotter
 
 
-def interpolate(data):
-    # Meshgrid für die Positionen der Daten erstellen
+def interpolate(data: np.ndarray) -> np.ndarray:
+    """
+    Performs linear interpolation on a 2D grid with NaN values.
+
+    Parameters:
+        data: 2D NumPy array with NaN values that need to be interpolated.
+
+    Returns:
+        2D NumPy array with interpolated values.
+    """
     x = np.arange(data.shape[1])
     y = np.arange(data.shape[0])
     xx, yy = np.meshgrid(x, y)
 
-    # Nur die Positionen und Werte der gültigen Daten extrahieren
     valid_points = ~np.isnan(data)
     points = np.column_stack((xx[valid_points], yy[valid_points]))
     values = data[valid_points]
 
-    # Zielkoordinaten für die Interpolation
     grid_x, grid_y = np.meshgrid(x, y)
-
-    # Interpolation durchführen
     interpolated_data = griddata(points, values, (grid_x, grid_y), method='linear')
 
-    # NaN-Werte außerhalb des Interpolationsbereichs auf 0 oder einen anderen Wert setzen
     return np.nan_to_num(interpolated_data)
 
-def plot_range(area_len, positions, ranges, step_count=40):
-    """
-    Plots a 3D surface plot of positions with heights based on ranges.
 
-    :param area_len: Length of a side of the area.
-    :param positions: List of [x, y] positions.
-    :param ranges: List of range values corresponding to the positions.
-    :param step_count: Number of steps in the x and y direction.
+def plot_range(area_len: float, positions: List[Tuple[float, float]], ranges: List[float],
+               step_count: int = 40) -> None:
+    """
+    Plots a 3D surface plot of positions with heights based on range values.
+
+    Parameters:
+        area_len: Length of a side of the area.
+        positions: List of (x, y) positions.
+        ranges: List of range values corresponding to the positions.
+        step_count: Number of steps in the x and y direction for interpolation. Default is 40.
     """
     ranges_count = len(ranges)
-
     factor = round(step_count / np.sqrt(ranges_count)) or 1
 
     # Create a grid of x and y values.

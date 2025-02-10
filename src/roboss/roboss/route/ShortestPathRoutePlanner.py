@@ -1,43 +1,75 @@
-from ..arena.Arena import Arena, Field
+from typing import List, Tuple, Optional
 
 from .RoutePlanner import RoutePlanner
+from ..arena.Arena import Arena, Field
 
-DIRECTIONS = {
-    'up': (-1, 0),
-    'right': (0, 1),
-    'down': (1, 0),
-    'left': (0, -1),
-    'up-right': (-1, 1),
-    'down-right': (1, 1),
-    'down-left': (1, -1),
-    'up-left': (-1, -1)
-}
+DIRECTIONS = {'up': (-1, 0), 'right': (0, 1), 'down': (1, 0), 'left': (0, -1), 'up-right': (-1, 1),
+              'down-right': (1, 1), 'down-left': (1, -1), 'up-left': (-1, -1)}
+
 
 class ShortestPathRoutePlanner(RoutePlanner):
-    def __init__(self, arena: Arena, startPos: tuple):
+    """
+    A route planner that calculates the shortest path between unvisited fields in an arena.
+
+    This class inherits from `RoutePlanner` and implements the `plan_route` method to plan the fastest
+    full-coverage route by finding the shortest path between unvisited fields.
+
+    Attributes:
+        arena : Arena
+            The arena that contains the segments to be traversed.
+        startPos : tuple[int, int]
+            The starting position in the arena.
+        direction : int
+            An internal variable used for direction tracking (unused in the current implementation).
+
+    Methods:
+        plan_route() -> List[Tuple[int, int]]
+            Plans the route through the arena, visiting all unvisited fields in the shortest possible way.
+        shortest_path(current_pos: tuple[int, int], target_pos: tuple[int, int]) -> List[Tuple[int, int]]
+            Calculates the shortest path between two positions using a greedy approach.
+        nearest_unvisited(current_pos: tuple[int, int]) -> Optional[Tuple[int, int]]
+            Finds the nearest unvisited field from the current position.
+        valid_pos(pos: tuple[int, int]) -> Optional[bool]
+            Checks if a given position is valid (within arena bounds and unvisited).
+        distance(pos: tuple[int, int], target_pos: tuple[int, int]) -> int
+            Computes the Manhattan distance between two positions.
+    """
+
+    def __init__(self, arena: Arena, start_pos: Tuple[int, int]):
+        """
+        Initializes the ShortestPathRoutePlanner with the given arena and starting position.
+
+        Parameters:
+            arena : Arena
+                The arena to be used for route planning.
+            start_pos : tuple[int, int]
+                The starting position in the arena.
+        """
         self.direction = 0
         self.arena = arena
-        self.startPos = startPos
+        self.startPos = start_pos
 
-    def plan_route(self):
+    def plan_route(self) -> List[Tuple[int, int]]:
         """
-        Find the fastest full coverage route.
-        :return: List of tuples with the route.
+        Plans the shortest route covering all unvisited fields in the arena.
+
+        This method uses a greedy approach to find the nearest unvisited field, and calculates the
+        shortest path to it. The process continues until all fields are visited.
+
+        Returns:
+            List[Tuple[int, int]]
+                A list of tuples representing the route to be followed, starting from the initial position.
         """
         route = []
-        # start at the start position
         current_pos = self.startPos
         route.append(current_pos)
         self.arena.segments[current_pos[0]][current_pos[1]].visited = True
-        # while there are unvisited fields
         n_correct = 1
+
         while True:
-            # get the next position
             next_pos = self.nearest_unvisited(current_pos)
-            # if there is no next position, break
             if not next_pos:
                 break
-            # add the path to the next position to the route
             shortest_path = self.shortest_path(current_pos, next_pos)
             print('shortest_path', shortest_path)
             route.extend(shortest_path)
@@ -50,25 +82,36 @@ class ShortestPathRoutePlanner(RoutePlanner):
                 print('route', route)
             if n_correct >= self.arena.n_fields:
                 break
-            # set the current position to the next position
             current_pos = next_pos
         return route
 
-    def shortest_path(self, current_pos: tuple, target_pos: tuple):
-        #find the shortest path between two points
+    def shortest_path(self, current_pos: Tuple[int, int], target_pos: Tuple[int, int]) -> List[Tuple[int, int]]:
+        """
+        Calculates the shortest path between two positions using a greedy approach.
+
+        Parameters:
+            current_pos : tuple[int, int]
+                The current position in the arena.
+            target_pos : tuple[int, int]
+                The target position to reach.
+
+        Returns:
+            List[Tuple[int, int]]
+                A list of tuples representing the shortest path from `current_pos` to `target_pos`.
+        """
         if current_pos == target_pos:
             return []
+
         path = []
         new_pos = None
-        # check if any of the directions is valid
+
+        # Check if any of the directions is valid
         while True:
             distance = self.distance(current_pos, target_pos)
-            # try ring around the current position with the distance
+            # Try ring around the current position with the distance
             for direction in [DIRECTIONS['up'], DIRECTIONS['right'], DIRECTIONS['down'], DIRECTIONS['left']]:
-                # get the new position
-                try_pos = (current_pos[0] + direction[0],
-                           current_pos[1] + direction[1])
-                #print('try_pos', try_pos)
+                try_pos = (current_pos[0] + direction[0], current_pos[1] + direction[1])
+
                 if try_pos == target_pos:
                     new_pos = try_pos
                     break
@@ -86,23 +129,32 @@ class ShortestPathRoutePlanner(RoutePlanner):
                 break
         return path
 
-    # TODO: mischung aus try diagonal und try paths -> trennen
-    def nearest_unvisited(self, current_pos: tuple):
-        #find the nearest unvisited field
+    def nearest_unvisited(self, current_pos: Tuple[int, int]) -> Optional[Tuple[int, int]]:
+        """
+        Finds the nearest unvisited field from the current position.
+
+        Parameters:
+            current_pos : tuple[int, int]
+                The current position in the arena.
+
+        Returns:
+            Optional[Tuple[int, int]]
+                The position of the nearest unvisited field, or `None` if no unvisited fields are found.
+        """
         nearest = None
         distance = 1
-
         possible_paths = []
 
         while True:
             directions = [DIRECTIONS['up'], DIRECTIONS['right'], DIRECTIONS['down'], DIRECTIONS['left']]
-            directionChanges = [DIRECTIONS['down-right'], DIRECTIONS['down-left'], DIRECTIONS['up-left'], DIRECTIONS['up-right']]
+            direction_changes = [DIRECTIONS['down-right'], DIRECTIONS['down-left'], DIRECTIONS['up-left'],
+                                DIRECTIONS['up-right']]
             possible_paths = [(current_pos, 0)]
             for possible_path in possible_paths:
                 # try all directions
-                for directionIndex, direction in enumerate(directions):
+                for direction_index, direction in enumerate(directions):
                     # try direction and all fields diagonally between the current direction and the next direction
-                    while not direction == directions[(directionIndex+1)%4]:
+                    while not direction == directions[(direction_index + 1) % 4]:
                         try_pos = (possible_path[0][0] + direction[0], possible_path[0][1] + direction[1])
                         if self.valid_pos(try_pos):
                             print('try_pos', try_pos, self.valid_pos(try_pos))
@@ -110,7 +162,8 @@ class ShortestPathRoutePlanner(RoutePlanner):
                             break
                         elif self.valid_pos(try_pos) == False:
                             possible_paths.append((try_pos, distance))
-                        direction = (direction[0] + directionChanges[directionIndex][0], direction[1] + directionChanges[directionIndex][1])
+                        direction = (direction[0] + direction_changes[direction_index][0],
+                                     direction[1] + direction_changes[direction_index][1])
                     if nearest:
                         break
                 if nearest:
@@ -120,13 +173,17 @@ class ShortestPathRoutePlanner(RoutePlanner):
             distance += 1
         return nearest
 
-
-
-    def valid_pos(self, pos: tuple):
+    def valid_pos(self, pos: Tuple[int, int]) -> Optional[bool]:
         """
-        Check if the position is valid.
-        :param pos: Position to check.
-        :return: True if the position is valid.
+        Checks if a given position is valid (within arena bounds and unvisited).
+
+        Parameters:
+            pos : tuple[int, int]
+                The position to check.
+
+        Returns:
+            Optional[bool]
+                `True` if the position is valid and unvisited, `False` if invalid or visited, `None` if out of bounds.
         """
         if 0 <= pos[0] < self.arena.size and 0 <= pos[1] < self.arena.size:
             if isinstance(self.arena.segments[pos[0]][pos[1]], Field):
@@ -136,11 +193,18 @@ class ShortestPathRoutePlanner(RoutePlanner):
                 return False
         return None
 
-    def distance(self, pos, target_pos):
+    def distance(self, pos: Tuple[int, int], target_pos: Tuple[int, int]) -> int:
         """
-        Calculate the Manhattan distance between two positions.
-        :param pos:
-        :param target_pos:
-        :return:
+        Computes the Manhattan distance between two positions.
+
+        Parameters:
+            pos : tuple[int, int]
+                The first position.
+            target_pos : tuple[int, int]
+                The second position.
+
+        Returns:
+            int
+                The Manhattan distance between `pos` and `target_pos`.
         """
         return abs(pos[0] - target_pos[0]) + abs(pos[1] - target_pos[1])
