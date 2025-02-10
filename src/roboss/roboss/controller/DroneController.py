@@ -9,9 +9,9 @@ from ..config import Config
 class DroneController:
     def __init__(self, interface):
         self.controller: DroneInterface = interface
-        self.range_map: Dict[List[float], float] = {}
+        self.range_map: Dict[tuple[float], float] = {}
 
-    def save_range(self, position: List[float]) -> bool:
+    def save_range(self, position: tuple[float], range: float) -> bool:
         """
         Saves the current range at the specified position, if it doesn't exist already.
 
@@ -21,7 +21,8 @@ class DroneController:
         if position in self.range_map:
             return False
 
-        self.range_map[position] = position[2] * 1000 - self.controller.get_range()
+        self.range_map[position] = position[2] * 1000 - range
+
         return True
 
     def move_to(self,

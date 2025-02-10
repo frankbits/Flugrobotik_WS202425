@@ -7,6 +7,8 @@ from rclpy.publisher import Publisher
 from std_msgs.msg import Empty
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
+from crazyflie_interfaces_python.client import LoggingClient
+from crazyflie_interfaces_python.client.logblock import LogBlockClient
 
 from .DroneInterface import DroneInterface
 from ..config import Config
@@ -50,12 +52,23 @@ class ROSDroneInterface(DroneInterface, Node):
         self.send_target_pub.publish(msg)
 
     def get_range(self) -> float:
-        pass  # TODO: get range from ROS-Logger logging data from the range sensor
+        # TODO: get range from ROS-Logger logging data from the range sensor
+        pass
 
-    def get_position(self) -> List[float] | None:
+    def set_range_callback(self, callback):
+        prefix = "/cf{}".format(Config.Flie.ID)
+        loggingClient = LoggingClient(self, prefix)
+        logBlock: LogBlockClient = loggingClient.create_log_block(["range.zrange"], "range", callback)
+        logBlock.start_log_block(10) #Alle 10ms messen
+        self.logBlock = logBlock
+
+    def stop_range_callback(self):
+        self.logBlock.stop_log_block()
+
+    def get_position(self) -> tuple[float] | None:
         try:
             t = self.tf_buffer.lookup_transform(Config.Flie.BASE_FRAME, Config.Flie.TF_NAME, rclpy.time.Time())
-            return [t.transform.translation.x, t.transform.translation.y, t.transform.translation.z]
+            return tuple([t.transform.translation.x, t.transform.translation.y, t.transform.translation.z])
         except Exception:
             return None
 
