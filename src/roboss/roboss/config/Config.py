@@ -5,6 +5,7 @@ class Arena:
     SEGMENTS_KEY = "segments"
     OBSTACLE_KEY = "obstacle"
     SEGMENT_SIZE = 0.2
+    SIZE = 1.45
 
 
 class Drone:

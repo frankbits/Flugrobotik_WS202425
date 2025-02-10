@@ -11,7 +11,13 @@ class F2CRoute:
         robot.setMinTurningRadius(Config.Drone.MIN_TURNING_RADIUS)
         robot.setMaxDiffCurv(Config.Drone.MIN_TURNING_RADIUS)
 
-        field = [(-2.0, -2.0), (2.0, -2.0), (2.0, 2.0), (-2.0, 2.0), (-2.0, 2.0)]
+        field = [
+            (-Config.Arena.SIZE, -Config.Arena.SIZE),
+            (Config.Arena.SIZE, -Config.Arena.SIZE),
+            (Config.Arena.SIZE, Config.Arena.SIZE),
+            (-Config.Arena.SIZE, Config.Arena.SIZE),
+            (-Config.Arena.SIZE, Config.Arena.SIZE),
+        ]
         obstacle1 = [(1.0, 1.0), (1.2, 1.0), (1.2, 1.2), (1.0, 1.2), (1.0, 1.0)]
         obstacle2 = [
             (-1.0, -1.0),
