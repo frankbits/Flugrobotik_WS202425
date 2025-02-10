@@ -1,119 +1,151 @@
-# for i in range(0, 100):
-#     print(f" \033[1;{i}m{i}\033[0m ", end='')
+"""
+Module: Renderer
+Provides functionality to render a board, save it to a file, and animate it.
+
+This class is responsible for:
+- Rendering a board with ANSI colors.
+- Saving board frames to a file.
+- Running board animations in a separate process.
+
+Usage:
+    - `Renderer.draw_board(board, colors)`: Generates a string representation of the board.
+    - `Renderer.draw_boardToFile(board, filename)`: Saves the board representation to a file.
+    - `Renderer.animate_board(frames, id)`: Animates a sequence of board frames.
+"""
+
 import os
 import subprocess
+from typing import List, Dict, Optional
 
 from ..config import Config
 
+
 class Renderer:
-    defaultColors = {
-        'X': Config.Render.Color.MAGENTA,
-        '#': Config.Render.Color.BLUE,
-        '^': Config.Render.Color.RED,
-        '>': Config.Render.Color.RED,
-        '<': Config.Render.Color.RED,
-        'v': Config.Render.Color.RED,
-        '': Config.Render.Color.WHITE # default color
-    }
+    """
+    A class for rendering a board, saving frames to a file, and animating the board.
+
+    Attributes:
+        default_colors (Dict[str, int]): Default color mapping for board characters.
+    """
+
+    default_colors: Dict[str, int] = {"X": Config.Render.Color.MAGENTA, "#": Config.Render.Color.BLUE,
+                                     "^": Config.Render.Color.RED, ">": Config.Render.Color.RED,
+                                     "<": Config.Render.Color.RED, "v": Config.Render.Color.RED,
+                                     "": Config.Render.Color.WHITE  # Default color for unrecognized characters
+                                      }
 
     @classmethod
-    def drawBoard(cls, board: list[list[str]], colors: dict = None):
+    def draw_board(cls, board: List[List[str]], colors: Optional[Dict[str, int]] = None) -> Optional[str]:
         """
-        Draw the board and return it as a string
+        Generates a string representation of the board with optional ANSI colors.
 
-        The default colors can be used by setting the colors attribute to ``Renderer.defaultColors``.
+        The default colors can be used by setting `colors` to `Renderer.default_colors`.
 
-        :param board: Array describing the board
-        :param colors: Dictionary with colors per character
-        :return: String representation of the board
+        Parameters:
+            board (List[List[str]]): A 2D list representing the board.
+            colors (Optional[Dict[str, int]]): Dictionary mapping characters to color codes.
+
+        Returns:
+            Optional[str]: The string representation of the board, or None if the board is empty.
         """
         if not board:
-            return
-        
-        board_str = ''
-        
-        # print top row numbers
-        board_str += '   '
+            return None
+
+        board_str = ""
+
+        # Print top row numbers
+        board_str += "   "
         for i in range(len(board[0])):
-            board_str += f' {i%10} '
-        board_str += '\n'
-        # print top outline
-        board_str += '  ┌' + '─' * len(board[0]) * 3 + '┐\n'
+            board_str += f" {i % 10} "
+        board_str += "\n"
+
+        # Print top outline
+        board_str += "  ┌" + "─" * len(board[0]) * 3 + "┐\n"
+
         for i, row in enumerate(board):
-            # print left outline
-            board_str += f'{i%10} │'
+            # Print left outline
+            board_str += f"{i % 10} │"
             for cell in row:
                 if colors and cell in colors:
-                    # get color for cell
+                    # Get color for cell
                     color = colors[cell]
-                    # print cell in color
+                    # Print cell in color
                     board_str += f" \033[1;{color}m{cell}\033[0m "
-                elif colors and '' in colors:
-                    # get default color
-                    color = colors['']
-                    # print cell in color
+                elif colors and "" in colors:
+                    # Get default color
+                    color = colors[""]
+                    # Print cell in color
                     board_str += f" \033[1;{color}m{cell}\033[0m "
                 else:
-                    # print cell without color
-                    board_str += f' {cell} '
-            # print right outline
-            board_str += '│\n'
-        # print bottom outline
-        board_str += '  └' + '─' * len(board[0]) * 3 + '┘\n'
+                    # Print cell without color
+                    board_str += f" {cell} "
+            board_str += "│\n"
+
+        # Print bottom outline
+        board_str += "  └" + "─" * len(board[0]) * 3 + "┘\n"
 
         return board_str
 
     @classmethod
-    def drawBoardToFile(cls, board, filename, colors=None, clear=False):
+    def draw_board_to_file(cls, board: List[List[str]], filename: str, colors: Optional[Dict[str, int]] = None,
+                           clear: bool = False) -> str:
         """
-        Draw the board to a file
-        :param board: Array describing the board
-        :param filename: Filename for the file without extension
-        :param colors: Dictionary with colors per character (e.g. ``Renderer.defaultColors``)
-        :param clear: Clear the file before writing
-        :return: Real path to the file
+        Saves the board representation to a file.
+
+        Parameters:
+            board (List[List[str]]): A 2D list representing the board.
+            filename (str): Name of the file (without extension).
+            colors (Optional[Dict[str, int]]): Color mapping dictionary.
+            clear (bool): If True, clears the file before writing.
+
+        Returns:
+            str: The absolute file path where the board was saved.
         """
-        frame = cls.drawBoard(board, colors)
+        frame = cls.draw_board(board, colors)
+        frames_filename = f"frames/{filename}.txt"
 
-        # frames-file
-        frames_filename = f'frames/{filename}.txt'
-
-        # save frames to file
-        with open(frames_filename, 'w' if clear else 'a', encoding="utf-8") as f:
+        with open(frames_filename, "w" if clear else "a", encoding="utf-8") as f:
             f.write(frame)
-            f.write('\n')
+            f.write("\n")
 
         return os.path.realpath(frames_filename)
 
     @classmethod
-    def animateBoard(cls, frames, id):
+    def animate_board(cls, frames: List[List[List[str]]], id: int) -> None:
+        """
+        Animates a sequence of board frames.
+
+        Parameters:
+            frames (List[List[List[str]]]): A list of 2D lists representing board frames.
+            id (int): Unique identifier for the animation.
+
+        Returns:
+            None
+        """
         if not frames:
             return
 
-        # frames-file
-        frames_filename = f'frames_{id}'
+        frames_filename = f"frames_{id}"
+        realpath = ""
 
-        # save frames to file
-        realpath = ''
         first_frame = True
         for frame in frames:
-            realpath = cls.drawBoardToFile(frame, frames_filename, clear=first_frame)
+            realpath = cls.draw_board_to_file(frame, frames_filename, clear=first_frame)
             first_frame = False
 
         cls.animate_frames(realpath)
 
     @classmethod
-    def animate_frames(cls, frames_file: str):
+    def animate_frames(cls, frames_file: str) -> None:
         """
-        Run the animation in a new console independent of the current process
-        :param frames_file: Path to the file containing the frames
-        :return: None
+        Runs the animation in a new console, independent of the current process.
+
+        Parameters:
+            frames_file (str): Path to the file containing the animation frames.
+
+        Returns:
+            None
         """
-        subprocess.Popen(
-            # Run the selected script with the selected input file
-            ['cmd', '/k', Config.Render.ANIMATION_FILEPATH, frames_file],
-            # Add the project folder to the python path
-            env={**os.environ, 'PYTHONPATH': os.path.abspath(os.path.dirname(__file__))},
-            # Open a new console window
-            creationflags=subprocess.CREATE_NEW_CONSOLE
-        )
+        subprocess.Popen(["cmd", "/k", Config.Render.ANIMATION_FILEPATH, frames_file],
+                         env={**os.environ, "PYTHONPATH": os.path.abspath(os.path.dirname(__file__))},
+                         creationflags=subprocess.CREATE_NEW_CONSOLE)

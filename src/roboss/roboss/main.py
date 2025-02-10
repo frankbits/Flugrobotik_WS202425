@@ -1,19 +1,27 @@
+from typing import List, Tuple
+
+import matplotlib.pyplot as plt
+import numpy as np
 import rclpy
-from .util import plot_range
+
+from route.ShortestPathRoutePlanner import ShortestPathRoutePlanner
 from .arena.Arena import Arena, Obstacle
 from .config import Config
 from .controller.DroneController import DroneController
 from .controller.ROSDroneInterface import ROSDroneInterface
-from .render.Renderer import Renderer
-from .route.F2CRoute import F2CRoute
 from .render.Plotter import Plotter
-from route.ShortestPathRoutePlanner import ShortestPathRoutePlanner
-from route.SpiralRoutePlanner import SpiralRoutePlanner
+from .render.Renderer import Renderer
+from .route.F2CRoutePlanner import F2CRoutePlanner
+from .util import plot_range
 
-def plot_heights(arena: Arena):
-    import matplotlib.pyplot as plt
-    import numpy as np
 
+def plot_heights(arena: Arena) -> None:
+    """
+    Plots the 3D height profile of the given arena.
+
+    Args:
+        arena (Arena): The environment representation containing obstacles.
+    """
     plotter = Plotter()
 
     # Create a grid of x and y values.
@@ -34,61 +42,64 @@ def plot_heights(arena: Arena):
                 Z[i][j] = arena.segments[i][j].height
 
     z = Z.ravel()
-
     axes_image = plotter.add_plot_range_3d_bar(x, y, z, "3D-Höhenprofil")
-
-    # show colorbar
     plt.colorbar(axes_image)
-
-    # Show the figure
     plotter.plot()
 
-def plan_route(arena: Arena, start_pos: tuple):
-    routePlanner = ShortestPathRoutePlanner(arena, start_pos) # SpiralRoutePlanner(arena, start_pos)
-    route = routePlanner.plan_route()
-    return route
 
-def main():
+def plan_route(arena: Arena, start_pos: Tuple[int, int]) -> List[Tuple[int, int]]:
+    """
+    Plans a route using the shortest path algorithm.
+
+    Args:
+        arena (Arena): The environment representation.
+        start_pos (Tuple[int, int]): The starting position.
+
+    Returns:
+        List[Tuple[int, int]]: The calculated route.
+    """
+    route_planner = ShortestPathRoutePlanner(arena, start_pos)
+    return route_planner.plan_route()
+
+
+def main() -> None:
+    """Main execution function for drone navigation."""
     print("Running")
 
     arena = Arena(Config.Arena.PATH)
-    print(Renderer.drawBoard(arena.get_mapped_arena()))
-
+    print(Renderer.draw_board(arena.get_mapped_arena()))
     print("Calculating path")
 
-    path = F2CRoute.getRoute(arena.get_obstacles())
+    path = F2CRoutePlanner.plan_route(arena.get_obstacles())
 
     rclpy.init()
-    
-    #route = plan_route(arena, (0, 0))
-    #print('ROUTE', route)
+
+    # route = plan_route(arena, (0, 0))
+    # print('ROUTE', route)
 
     # animate route on board
-    #mappedArena = arena.get_mapped_arena()
-    #framesFile = Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors, clear=True)
-    #for pos in route:
+    # mappedArena = arena.get_mapped_arena()
+    # framesFile = Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors, clear=True)
+    # for pos in route:
     #    mappedArena[pos[0]][pos[1]] = 'v'
     #    Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors)
     #    mappedArena[pos[0]][pos[1]] = 'X'
-    #Renderer.animate_frames(framesFile)
+    # Renderer.animate_frames(framesFile)
 
     interface = ROSDroneInterface()
     drone = DroneController(interface)
 
     print("Takeoff")
-
     drone.controller.takeoff()
     drone.controller.sleep(4)
 
     print("Flying path")
-
     drone.controller.set_range_callback(lambda x: drone.save_range(drone.controller.get_position(), x[0]))
 
     for state in path.getStates():
         drone.move_to([state.point.X(), state.point.Y(), 1.0], lambda pos: drone.controller.get_range())
 
     drone.controller.stop_range_callback()
-
     print("Resetting and landing")
 
     drone.move_to([0.0, 0.0, 0.0])
@@ -96,13 +107,9 @@ def main():
     drone.controller.sleep(4)
 
     print("Finished")
-
     print("Plotting Ranges")
-    
     print(drone.range_map)
-    # plot_heights(arena) # only showing obstacles with full height 
-    # TODO: use plot_heights() with Plotter.add_plot_range_3d_bar() (bar3d) instead of add_plot_range_3d() (plot_surface)
-    # TODO: better calculation of rangeValues: more measurePoints (ROSDroneInterface l62), are 10 interpolate-steps in plot_range() correct?
+    # plot_heights(arena) # only showing obstacles with full height
     plot_range(2, list(drone.range_map.keys()), list(drone.range_map.values()), 10)
 
     try:

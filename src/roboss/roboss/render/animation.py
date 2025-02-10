@@ -1,57 +1,57 @@
-# from os import system
+"""
+Module: ASCII Animation Player
+Reads frames from a text file and animates them in the terminal.
+
+This script reads ASCII animation frames from a file and continuously plays them in the terminal.
+It uses ANSI escape codes to manipulate cursor positioning, hide the cursor, and restore it after
+a keyboard interrupt.
+
+Usage:
+    python script.py <input_file>
+
+Where:
+    <input_file> is a text file where frames are separated by blank lines.
+
+Features:
+    - Reads ASCII frames from a text file.
+    - Uses ANSI escape codes to control cursor position and visibility.
+    - Continuously loops through the frames until interrupted (Ctrl+C).
+"""
+
 import sys
 import time
 
-# get first parameter from command line
+# Ensure an input file is provided
 if len(sys.argv) > 1:
-    inputFile = sys.argv[1]
+    input_file: str = sys.argv[1]
 else:
-    exit("No input file given")
+    exit("Error: No input file provided.")
 
-# get frames from file
-frames = []
-with open(inputFile, 'r', encoding="utf-8") as f:
-    frame = ''
+# Read frames from the file
+frames: list[str] = []
+with open(input_file, 'r', encoding="utf-8") as f:
+    frame: str = ''
     for line in f:
-        if line == '\n':
+        if line == '\n':  # Empty line indicates a new frame
             frames.append(frame)
             frame = ''
         else:
             frame += line
-    frames.append(frame)
+    frames.append(frame)  # Append the last frame
 
-# move cursor to top left
-# print(f"\033[0;0H", end="")
-
-# move cursor to bottom right
-# print(f"\033[{len(frames[0]) + 3};{len(frames[0][0]) * 3 + 3}H", end="")
-
-# move cursor up
-# print(f"\033[{nlines}A", end="")
-
-# save current cursor position
+# Save the current cursor position
 print("\033[s", end="")
 
-# restore cursor position
-# print("\033[u", end="")
-
-# clear screen
-# system('clear') # linux
-# system('cls') # windows
-# print("\033[2J", end="")
-
-# hide cursor
+# Hide the cursor to avoid flickering
 print("\033[?25l", end="")
 
-# show cursor again after KeyboardInterrupt
 try:
     while True:
-        nlines = len(frames[0])
         for frame in frames:
-            # restore cursor position
+            # Restore cursor position to overwrite the previous frame
             print("\033[u", end="")
-            print(frame)
-            time.sleep(.1)
+            print(frame, end="", flush=True)
+            time.sleep(0.1)  # Delay between frames
 except KeyboardInterrupt:
-    # show cursor
+    # Show cursor again when interrupted
     print("\033[?25h", end="")
