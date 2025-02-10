@@ -44,8 +44,9 @@ class Topic:
 class Render:
     OBSTACLE = "#"
     EMPTY = "."
-    EMPTY_VISITED = "O"
+    ROUTE = "O"
     DRONE = "v" # directional drone: "^", ">", "v", "<"
+    VISITED = "X"
 
     class Color:
         BLACK = 30

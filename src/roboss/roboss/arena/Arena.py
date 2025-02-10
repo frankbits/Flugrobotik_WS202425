@@ -73,7 +73,7 @@ class Arena:
                         lambda y: (
                             Config.Render.OBSTACLE
                             if isinstance(y, Obstacle)
-                            else (Config.Render.EMPTY_VISITED if y.visited else Config.Render.EMPTY)
+                            else (Config.Render.ROUTE if y.visited else Config.Render.EMPTY)
                         ),
                         x,
                     )

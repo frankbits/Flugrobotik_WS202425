@@ -64,13 +64,13 @@ def main():
     #print('ROUTE', route)
 
     # animate route on board
-    #mappedArena = arena.get_mapped_arena()
-    #framesFile = Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors, clear=True)
-    #for pos in route:
-    #    mappedArena[pos[0]][pos[1]] = 'v'
+    # mappedArena = arena.get_mapped_arena()
+    # framesFile = Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors, clear=True)
+    # for pos in route:
+    #    mappedArena[pos[0]][pos[1]] = Config.Render.DRONE
     #    Renderer.drawBoardToFile(mappedArena, "route", colors=Renderer.defaultColors)
-    #    mappedArena[pos[0]][pos[1]] = 'X'
-    #Renderer.animate_frames(framesFile)
+    #    mappedArena[pos[0]][pos[1]] = Config.Render.VISITED
+    # Renderer.animate_frames(framesFile)
 
     interface = ROSDroneInterface()
     drone = DroneController(interface)
