@@ -3,7 +3,7 @@ from typing import List
 import time
 from threading import Thread
 
-import DroneInterface
+from .DroneInterface import DroneInterface
 from ..config import Config
 from ..webots import Supervisor
 
