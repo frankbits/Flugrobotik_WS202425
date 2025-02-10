@@ -1,4 +1,5 @@
 import rclpy
+from .util import plot_range
 from .arena.Arena import Arena, Obstacle
 from .config import Config
 from .controller.DroneController import DroneController
@@ -81,6 +82,7 @@ def main():
     
     print(drone.range_map)
     plot_heights(arena)
+    plot_range(2, list(drone.range_map.keys()), list(drone.range_map.values()))
 
     try:
         while rclpy.ok():
