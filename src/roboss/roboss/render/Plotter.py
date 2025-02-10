@@ -124,29 +124,6 @@ class Plotter:
         extent = [np.min(xx), np.max(xx), np.min(yy), np.max(yy)]
         return ax.imshow(zz, cmap='viridis', origin='lower', extent=extent)
 
-    def add_plot_range_scatter(self, positions: Iterable[tuple[float, float]], ranges: Iterable[float],
-                               title: str = "Scatter-2D-Höhenprofil") -> PathCollection:
-        """
-        Creates a scatter plot of positions with varying sizes and colors based on ranges.
-
-        Parameters:
-            positions (Iterable[tuple[float, float]]): List of (x, y) positions.
-            ranges (Iterable[float]): List of corresponding range values.
-            title (str): The title of the plot.
-
-        Returns:
-            PathCollection: The plotted scatter plot.
-        """
-        ax = self.add_subplot()
-        ax.set_title(title)
-
-        x_positions = [row[0] for row in positions]
-        y_positions = [row[1] for row in positions]
-        sizes = list(map(lambda range1: range1 / 10, ranges))
-        colors = list(map(lambda range1: range1 * 100, ranges))
-
-        return ax.scatter(x_positions, y_positions, s=sizes, c=colors, cmap='viridis')
-
     def plot(self) -> None:
         """
         Displays the figure with all added subplots.
