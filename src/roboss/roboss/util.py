@@ -77,18 +77,30 @@ def plot_range(area_len: float, positions: List[Tuple[float, float]], ranges: Li
     # plot_range_2d(Z)
     zz_interpolated = interpolate(Z)
 
+
     # Create a plotter object with 1 row and 2 columns.
     # plotter = Plotter(2, 2)
-    plotter = Plotter(2, 2)
+    plotter = Plotter(2, 3)
 
     # Add 2D, 2D-Scatter and 3D plots
     # plotter.add_plot_range_3d(X, Y, Z)
+    plotter.add_plot_range_3d(X, Y, Z, "3D-Höhenprofil")
+
+    # plotter.add_plot_range_2d(X, Y, Z)
+    axes_image = plotter.add_plot_range_2d(X, Y, Z, "2D-Höhenprofil")
+
+    x, y = X.ravel(), Y.ravel()
+    z = Z.ravel()
+    plotter.add_plot_range_3d_bar(x, y, z, "3D-Höhenprofil-Bar")
+    
     plotter.add_plot_range_3d(X, Y, zz_interpolated, "Interpoliertes 3D-Höhenprofil")
 
     # plotter.add_plot_range_2d(X, Y, Z)
     axes_image = plotter.add_plot_range_2d(X, Y, zz_interpolated, "Interpoliertes 2D-Höhenprofil")
 
-    plotter.add_plot_range_3d_bar(X, Y, zz_interpolated, "Interpoliertes 3D-Höhenprofil-Bar")
+    x, y = X.ravel(), Y.ravel()
+    z = zz_interpolated.ravel()
+    plotter.add_plot_range_3d_bar(x, y, z, "Interpoliertes 3D-Höhenprofil-Bar")
 
     # plotter.add_plot_range_scatter(positions, ranges)
 

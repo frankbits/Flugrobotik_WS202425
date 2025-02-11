@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import rclpy
 
-from route.ShortestPathRoutePlanner import ShortestPathRoutePlanner
+from .route.ShortestPathRoutePlanner import ShortestPathRoutePlanner
 from .arena.Arena import Arena, Obstacle
 from .config import Config
 from .controller.DroneController import DroneController
@@ -61,6 +61,9 @@ def plan_route(arena: Arena, start_pos: Tuple[int, int]) -> List[Tuple[int, int]
     route_planner = ShortestPathRoutePlanner(arena, start_pos)
     return route_planner.plan_route()
 
+def convert_to_tuple(position: List[float]) -> Tuple[float, float, float]:
+    return (position[0], position[1], position[2])
+
 
 def main() -> None:
     """Main execution function for drone navigation."""
@@ -70,7 +73,7 @@ def main() -> None:
     print(Renderer.draw_board(arena.get_mapped_arena()))
     print("Calculating path")
 
-    path = F2CRoutePlanner.plan_route(arena.get_obstacles())
+    path = F2CRoutePlanner().plan_route(arena.get_obstacles())
 
     rclpy.init()
 
@@ -94,10 +97,10 @@ def main() -> None:
     drone.controller.sleep(4)
 
     print("Flying path")
-    drone.controller.set_range_callback(lambda x: drone.save_range(drone.controller.get_position(), x[0]))
+    drone.controller.set_range_callback(lambda x: drone.save_range(convert_to_tuple(drone.controller.get_position()), x[0]))
 
     for state in path.getStates():
-        drone.move_to([state.point.X(), state.point.Y(), 1.0], lambda pos: drone.controller.get_range())
+        drone.move_to([state.point.X(), state.point.Y(), Config.Drone.HEIGHT], lambda pos: drone.controller.get_range())
 
     drone.controller.stop_range_callback()
     print("Resetting and landing")

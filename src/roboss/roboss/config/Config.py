@@ -22,7 +22,7 @@ class Arena:
         SEGMENT_SIZE (float): The size (in meters) of each segment.
         SIZE (float): The overall arena size (in meters).
     """
-    PATH: str = "/home/rosrunner/Documents/Flugrobotik_WS202425/bin/arena.json"
+    PATH: str = "/home/rosrunner/Documents/Flugrobotik/TeamRoboss/Flugrobotik_WS202425/bin/arena.json"
     ARENA_KEY: str = "arena"
     SIZE_KEY: str = "size"
     SEGMENTS_KEY: str = "segments"
@@ -43,6 +43,7 @@ class Drone:
         MAX_DIFF_CURV (float): The maximum differential curvature.
         INITIAL_X (float): The initial X coordinate.
         INITIAL_Y (float): The initial Y coordinate.
+        HEIGHT (float): Fleight height (Z coordinate)
     """
     A_TOL: float = 0.3
     WIDTH: float = 0.115
@@ -51,6 +52,7 @@ class Drone:
     MAX_DIFF_CURV: float = 0.25
     INITIAL_X: float = 0.0
     INITIAL_Y: float = 0.0
+    HEIGHT: float = 1.0
 
 
 class Flie:
@@ -65,7 +67,7 @@ class Flie:
         BASE_FRAME (str): The base frame for transformations.
         QOS_PROFILE (int): Quality of Service profile identifier.
     """
-    ID: int = 1
+    ID: int = 0
     SAFEFLIE_NAME: str = f"safeflie{ID}"
     TF_NAME: str = f"cf{ID}"
     NODE_NAME: str = "tha_flie"

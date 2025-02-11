@@ -120,7 +120,7 @@ class F2CRoutePlanner(RoutePlanner):
         f2c.Visualizer.plot(cells)
         f2c.Visualizer.plot(mainland)
         f2c.Visualizer.plot(path)
-        f2c.Visualizer.save()
+        f2c.Visualizer.save(Config.Render.PATH_VISUALIZATION_FILEPATH)
 
         print("Saved visualization of the computed path")
 
