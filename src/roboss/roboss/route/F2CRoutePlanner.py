@@ -87,6 +87,7 @@ class F2CRoutePlanner(RoutePlanner):
 
         # Generate headlands (buffer area around the field)
         headland_generator = f2c.HG_Const_gen()
+
         midland = headland_generator.generateHeadlands(cells, 0.04)
         # cells = decomposer.decompose(midland)
         mainland = headland_generator.generateHeadlands(cells, 0.02)
@@ -94,7 +95,7 @@ class F2CRoutePlanner(RoutePlanner):
         print("Generated headlands for path planning using {type(headland_generator)}")
 
         # Generate swaths (coverage strips)
-        objective_function = f2c.OBJ_FieldCoverage()
+        objective_function = f2c.OBJ_NSwath()
         swath_generator = f2c.SG_BruteForce()
         swaths = swath_generator.generateBestSwaths(objective_function, robot.getCovWidth(), mainland)
 
