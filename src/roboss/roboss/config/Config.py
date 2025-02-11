@@ -28,8 +28,7 @@ class Arena:
     SEGMENTS_KEY: str = "segments"
     OBSTACLE_KEY: str = "obstacle"
     SEGMENT_SIZE: float = 0.2
-    SIZE: float = 1.4
-
+    SIZE: float = 0.9
 
 class Drone:
     """
@@ -45,7 +44,7 @@ class Drone:
         INITIAL_Y (float): The initial Y coordinate.
         HEIGHT (float): Fleight height (Z coordinate)
     """
-    A_TOL: float = 0.3
+    A_TOL: float = 0.2
     WIDTH: float = 0.115
     OPERATIONAL_WIDTH: float = WIDTH  # Defines the swaths width, should be the diameter of the Range Finder sensor spread
     MIN_TURNING_RADIUS: float = 0.05

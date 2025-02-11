@@ -140,4 +140,4 @@ class Arena:
             float: The corresponding Cartesian coordinate.
         """
         # The formula maps index [0, size-1] to [-SIZE, SIZE]
-        return -Config.Arena.SIZE + (index / float(self.size - 1) * (Config.Arena.SIZE * 2))
+        return -Config.Arena.SIZE + (index / float(self.size) * (Config.Arena.SIZE * 2))

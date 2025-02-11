@@ -94,7 +94,7 @@ def main() -> None:
 
     print("Takeoff")
     drone.controller.takeoff()
-    drone.controller.sleep(4)
+    drone.controller.sleep(3)
 
     print("Flying path")
     drone.controller.set_range_callback(lambda x: drone.save_range(convert_to_tuple(drone.controller.get_position()), x[0]))
@@ -105,15 +105,15 @@ def main() -> None:
     drone.controller.stop_range_callback()
     print("Resetting and landing")
 
-    drone.move_to([0.0, 0.0, 0.0])
+    #drone.move_to([0.0, 0.0, 0.0])
     drone.controller.land()
-    drone.controller.sleep(4)
+    drone.controller.sleep(2)
 
     print("Finished")
     print("Plotting Ranges")
     print(drone.range_map)
     # plot_heights(arena) # only showing obstacles with full height
-    plot_range(2, list(map(lambda pos: (pos[0], pos[1]), drone.range_map.keys())), list(drone.range_map.values()), 10)
+    plot_range(Config.Arena.SIZE * 2.0, list(map(lambda pos: (pos[0], pos[1]), drone.range_map.keys())), list(drone.range_map.values()), 10)
 
     try:
         while rclpy.ok():
