@@ -80,6 +80,9 @@ Different implementations of coverage path planning algorithms can be found insi
 - `ShortestPathPlanner`: Utilizes a greedy shortest path algorithm
 - `SpiralRoutePlanner`: Utilizes a spiral path for full coverage
 
+The final F2C Route is shown below:
+![F2CPath](./src/path.png)
+
 ## Launching
 
 Assuming all configurations are done, you can launch the project directly on the Crazyflie itself or inside the Webots simulation.
