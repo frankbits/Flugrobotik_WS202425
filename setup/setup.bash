@@ -2,7 +2,7 @@
 export ROS_LOCALHOST_ONLY=1
 export ROS_DOMAIN_ID=80
 export WEBOTS_HOME=/usr/local/webots
-export CRAZYFLIE_ID=1
+export CRAZYFLIE_ID=0
 
 # Alias
 # alias sendTarget="ros2 topic pub /safeflie0/send_target crazyflies_interfaces/msg/SendTarget \"p" --> Use Autocomplete

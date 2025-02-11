@@ -19,7 +19,7 @@ import fields2cover as f2c
 
 from .RoutePlanner import RoutePlanner
 from ..config import Config
-
+import math
 
 class F2CRoutePlanner(RoutePlanner):
     """
@@ -68,10 +68,13 @@ class F2CRoutePlanner(RoutePlanner):
 
         # Define obstacle areas as small squares
         for obstacle in obstacles:
-            obstacle_rings.append([(obstacle[0], obstacle[1]), (obstacle[0] + Config.Arena.SEGMENT_SIZE, obstacle[1]),
-                                   (obstacle[0] + Config.Arena.SEGMENT_SIZE, obstacle[1] - Config.Arena.SEGMENT_SIZE,),
-                                   (obstacle[0], obstacle[1] - Config.Arena.SEGMENT_SIZE),
-                                   (obstacle[0], obstacle[1]), ])
+            obstacle_rings.append([
+                                    (obstacle[0], obstacle[1]), 
+                                    (obstacle[0] + Config.Arena.SEGMENT_SIZE, obstacle[1]),
+                                    (obstacle[0] + Config.Arena.SEGMENT_SIZE, obstacle[1] + Config.Arena.SEGMENT_SIZE,),
+                                    (obstacle[0], obstacle[1] + Config.Arena.SEGMENT_SIZE),
+                                    (obstacle[0], obstacle[1])
+                                   ])
 
         for ring in obstacle_rings:
             cells.addRing(0, _create_linear_ring(ring))
@@ -84,14 +87,15 @@ class F2CRoutePlanner(RoutePlanner):
 
         # Generate headlands (buffer area around the field)
         headland_generator = f2c.HG_Const_gen()
-        midland = headland_generator.generateHeadlands(cells, robot.getWidth() / 2.0)
+
+        midland = headland_generator.generateHeadlands(cells, 0.04)
         # cells = decomposer.decompose(midland)
-        mainland = headland_generator.generateHeadlands(cells, 2 * robot.getWidth() / 2.0)
+        mainland = headland_generator.generateHeadlands(cells, 0.02)
 
         print("Generated headlands for path planning using {type(headland_generator)}")
 
         # Generate swaths (coverage strips)
-        objective_function = f2c.OBJ_FieldCoverage()
+        objective_function = f2c.OBJ_NSwath()
         swath_generator = f2c.SG_BruteForce()
         swaths = swath_generator.generateBestSwaths(objective_function, robot.getCovWidth(), mainland)
 
@@ -102,7 +106,7 @@ class F2CRoutePlanner(RoutePlanner):
 
         # Plan the route with a defined starting position
         route_planner = f2c.RP_RoutePlannerBase()
-        route_planner.setStartAndEndPoint(f2c.Point(Config.Drone.INITIAL_X, Config.Drone.INITIAL_Y))
+        #route_planner.setStartAndEndPoint(f2c.Point(Config.Drone.INITIAL_X, Config.Drone.INITIAL_Y))
         route = route_planner.genRoute(midland, swaths)
 
         print(
@@ -120,7 +124,7 @@ class F2CRoutePlanner(RoutePlanner):
         f2c.Visualizer.plot(cells)
         f2c.Visualizer.plot(mainland)
         f2c.Visualizer.plot(path)
-        f2c.Visualizer.save()
+        f2c.Visualizer.save(Config.Render.PATH_VISUALIZATION_FILEPATH)
 
         print("Saved visualization of the computed path")
 

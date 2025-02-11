@@ -66,8 +66,8 @@ def generate_launch_description():
     safeflie = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([crazyflies_dir, "/launch/safeflie.launch.py"]),
         launch_arguments={
-            "id": "1", # Hardware: ?, Webots: 0
-            "channel": "100",
+            "id": "0", # Hardware: ?, Webots: 0
+            "channel": "80",
             "initial_position": "[0.0, 0.0, 0.0]",
             "type": "1", # Hardware: 1, Webots: 2
         }.items(),

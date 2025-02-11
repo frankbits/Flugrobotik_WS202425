@@ -109,7 +109,7 @@ class ROSDroneInterface(DroneInterface, Node):
         prefix = f"/cf{Config.Flie.ID}"
         logging_client = LoggingClient(self, prefix)
         log_block: LogBlockClient = logging_client.create_log_block(["range.zrange"], "range", callback)
-        log_block.start_log_block(10)  # Log every 10ms
+        log_block.start_log_block(1)  # Log every 1 ms
         self.logBlock = log_block
 
     def stop_range_callback(self) -> None:
