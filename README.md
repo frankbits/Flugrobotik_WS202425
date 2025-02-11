@@ -81,7 +81,7 @@ Different implementations of coverage path planning algorithms can be found insi
 - `SpiralRoutePlanner`: Utilizes a spiral path for full coverage
 
 The final F2C Route is shown below:
-![F2CPath](./src/path.png)
+![F2CPath](./path.png)
 
 ## Launching
 
