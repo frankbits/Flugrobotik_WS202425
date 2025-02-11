@@ -79,7 +79,7 @@ def plot_range(area_len: float, positions: List[Tuple[float, float]], ranges: Li
 
     # Create a plotter object with 1 row and 2 columns.
     # plotter = Plotter(2, 2)
-    plotter = Plotter(1, 2)
+    plotter = Plotter(2, 2)
 
     # Add 2D, 2D-Scatter and 3D plots
     # plotter.add_plot_range_3d(X, Y, Z)
@@ -87,6 +87,8 @@ def plot_range(area_len: float, positions: List[Tuple[float, float]], ranges: Li
 
     # plotter.add_plot_range_2d(X, Y, Z)
     axes_image = plotter.add_plot_range_2d(X, Y, zz_interpolated, "Interpoliertes 2D-Höhenprofil")
+
+    plotter.add_plot_range_3d_bar(X, Y, zz_interpolated, "Interpoliertes 3D-Höhenprofil-Bar")
 
     # plotter.add_plot_range_scatter(positions, ranges)
 
