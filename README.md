@@ -121,12 +121,9 @@ Documentation can be found under the [`doc`](./doc) directory and is additionall
 
 ### Domain Diagram
 ![Domain Diagram](./doc/domaindiagram.svg)
-<img src="./doc/domaindiagram.svg">
 
 ### State Machine
 ![State Machine](./doc/statemachine.svg)
-<img src="./doc/statemachine.svg">
 
 ## Class Diagram
 ![Class Diagram](./doc/classdiagram.svg)
-<img src="./doc/classdiagram.svg">
