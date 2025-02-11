@@ -74,7 +74,7 @@ The project provides some handy aliases for convenience.
 
 ## Path Planning
 
-Different implementations of coverage path planning algorithms can be found inside the module `[route](./src/roboss/roboss/route)`.
+Different implementations of coverage path planning algorithms can be found inside the module [`route`](./src/roboss/roboss/route).
 
 - `F2CRoutePlanner`: Fields2Cover algorithm using brute-force swath generation and Dubin's curves for smooth turning
 - `ShortestPathPlanner`: Utilizes a greedy shortest path algorithm
